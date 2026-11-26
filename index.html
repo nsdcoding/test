@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Nusaybah's Robo Count</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,34 +57,43 @@ img{-webkit-user-drag:none;user-select:none}
 #stage{position:absolute;inset:0;display:grid;grid-template-columns:minmax(170px,31%) 1fr;
   padding:calc(env(safe-area-inset-top,0px) + 92px) max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 12px) max(12px,env(safe-area-inset-left,0px));gap:8px;z-index:10}
 #roboCell{position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:0}
-#robo{position:relative;height:min(100%,64vh);aspect-ratio:704/918;max-width:100%;cursor:pointer}
+#robo{position:relative;height:min(100%,64vh);aspect-ratio:490/620;max-width:100%;cursor:pointer}
 #roboFloat{width:100%;height:100%;animation:float 3s ease-in-out infinite}
-#roboImg{width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 16px 12px rgba(53,36,110,.3));transform-origin:50% 100%}
+#roboFig{position:relative;width:100%;height:100%;transform-origin:50% 100%;filter:drop-shadow(0 16px 12px rgba(53,36,110,.3))}
+#roboImg{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;display:block}
+.fig{position:relative;height:100%;aspect-ratio:490/620}
+.fig .rb{position:relative;z-index:1;width:100%;height:100%;display:block;object-fit:contain}
+.wear{position:absolute;left:calc(var(--x) * 100%);top:calc(var(--y) * 100%);width:calc(var(--w) * 100%);height:auto;max-width:none;
+  transform:translate(-50%,calc(var(--oy) * -100%)) rotate(var(--r));pointer-events:none;filter:drop-shadow(0 2px 2px rgba(53,36,110,.25))}
+.wear.pop{animation:wearPop .8s cubic-bezier(.3,1.8,.5,1)}
+@keyframes wearPop{from{scale:2.4;opacity:0}}
 @keyframes float{50%{transform:translateY(-12px)}}
-#robo.jump #roboImg{animation:rjump .9s cubic-bezier(.3,1.4,.5,1)}
+#robo.jump #roboFig{animation:rjump .9s cubic-bezier(.3,1.4,.5,1)}
 @keyframes rjump{35%{transform:translateY(-22%) scale(1.04)}70%{transform:translateY(0) scale(1.08,.9)}}
-#robo.dance #roboImg{animation:rdance .5s ease-in-out 5}
+#robo.dance #roboFig{animation:rdance .5s ease-in-out 5}
 @keyframes rdance{25%{transform:rotate(-8deg) translateY(-6px)}75%{transform:rotate(8deg) translateY(-6px)}}
-#robo.wiggle #roboImg{animation:rwiggle .8s}
+#robo.wiggle #roboFig{animation:rwiggle .8s}
 @keyframes rwiggle{20%{transform:scale(1.08,.92)}40%{transform:scale(.94,1.06) rotate(-5deg)}60%{transform:scale(1.04,.96) rotate(5deg)}80%{transform:rotate(-2deg)}}
-#robo.spin #roboImg{animation:rspin 1.4s ease-in-out}
+#robo.spin #roboFig{animation:rspin 1.4s ease-in-out}
 @keyframes rspin{30%{transform:rotate(-20deg)}60%{transform:rotate(380deg)}100%{transform:rotate(360deg)}}
-#robo.boing #roboImg{animation:rboing 1.2s ease-out}
+#robo.boing #roboFig{animation:rboing 1.2s ease-out}
 @keyframes rboing{15%{transform:translateY(-18%)}30%{transform:translateY(0) scale(1.1,.88)}45%{transform:translateY(-10%)}60%{transform:translateY(0) scale(1.05,.94)}75%{transform:translateY(-4%)}100%{transform:none}}
-#robo.sleep #roboImg{animation:rsleep 2.4s ease-in-out}
+#robo.sleep #roboFig{animation:rsleep 2.4s ease-in-out}
 @keyframes rsleep{50%{transform:rotate(-6deg) translateY(4px) scale(.98)}}
-#robo.sneeze #roboImg{animation:rsneeze 1.2s}
+#robo.sneeze #roboFig{animation:rsneeze 1.2s}
 @keyframes rsneeze{0%,50%{transform:scale(1)}40%{transform:rotate(-6deg) scale(1.03)}60%{transform:rotate(8deg) translateX(-12px) scale(.95)}80%{transform:rotate(-3deg)}}
-#robo.shy #roboImg{animation:rshy 1.6s ease-in-out}
+#robo.shy #roboFig{animation:rshy 1.6s ease-in-out}
 @keyframes rshy{30%,70%{transform:rotate(-5deg) scale(.95)}}
-#robo.peek #roboImg{animation:rpeek 1.6s}
+#robo.peek #roboFig{animation:rpeek 1.6s}
 @keyframes rpeek{30%,60%{transform:translateY(40%) scale(.9)}80%{transform:translateY(-8%) scale(1.05)}}
-#robo.chomp #roboImg{animation:rchomp .35s}
+#robo.chomp #roboFig{animation:rchomp .35s}
 @keyframes rchomp{50%{transform:scale(1.07,.92)}}
-#robo.hearts #roboImg{animation:rheart 1s ease-in-out 2}
+#robo.hearts #roboFig{animation:rheart 1s ease-in-out 2}
 @keyframes rheart{50%{transform:scale(1.08)}}
-#robo.bounce #roboImg{animation:rjump .7s cubic-bezier(.3,1.4,.5,1) 2}
+#robo.bounce #roboFig{animation:rjump .7s cubic-bezier(.3,1.4,.5,1) 2}
 
+#stage.scene{grid-template-columns:1fr}
+#stage.scene #roboCell{display:none}
 #play{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,3vmin,26px);min-width:0;min-height:0}
 @media (max-width:640px){
   #hud{flex-wrap:wrap}
@@ -105,7 +115,7 @@ img{-webkit-user-drag:none;user-select:none}
 .obj.gone{visibility:hidden}
 .obj.dim{opacity:.35;pointer-events:none;filter:grayscale(.6)}
 .obj.party .bob{animation:party .5s ease-in-out 3}
-.obj.leaving{animation:none}
+.obj.leaving,.obj.entering{animation:none}
 .obj.leaving .bob{animation:none}
 @keyframes party{50%{transform:translateY(-28%) rotate(10deg) scale(1.1)}}
 .badge{position:absolute;top:-8%;right:-8%;width:44%;aspect-ratio:1;border-radius:50%;background:var(--pink);color:#fff;
@@ -150,7 +160,56 @@ img{-webkit-user-drag:none;user-select:none}
 .friend.up{animation:friendUp 2.6s cubic-bezier(.3,1.5,.5,1) forwards}
 @keyframes friendUp{0%{transform:translateY(120%)}18%{transform:translateY(-6%) rotate(-6deg)}30%{transform:translateY(0) rotate(4deg)}45%{transform:translateY(-14%) rotate(-4deg)}60%{transform:translateY(0)}82%{transform:translateY(0)}100%{transform:translateY(120%)}}
 
-/* present */
+/* trip location chip */
+#chip{display:flex;align-items:center;gap:6px;background:var(--pink);color:#fff;font-weight:700;font-size:clamp(15px,2.4vmin,22px);padding:8px 16px 8px 10px;border-radius:999px;border:3px solid #fff;box-shadow:0 4px 0 rgba(53,36,110,.18);animation:popIn .5s cubic-bezier(.3,1.7,.5,1);white-space:nowrap;max-width:40vw;overflow:hidden;text-overflow:ellipsis}
+#chip svg{width:1.3em;height:1.3em;flex:none}
+@media (max-width:640px){#chip{max-width:60vw}}
+
+/* new thing to wear */
+#wearShow{position:absolute;inset:0;z-index:46;display:grid;place-items:center;background:rgba(53,36,110,.35)}
+#wearShow .rays{position:absolute;width:min(110vmin,900px);aspect-ratio:1;border-radius:50%;
+  background:repeating-conic-gradient(rgba(255,226,90,.55) 0 9deg,transparent 9deg 22deg);-webkit-mask:radial-gradient(circle,#000 20%,transparent 68%);mask:radial-gradient(circle,#000 20%,transparent 68%);animation:spin 14s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#wearShow img{position:relative;width:min(52vmin,400px);height:min(52vmin,400px);object-fit:contain;filter:drop-shadow(0 14px 14px rgba(30,20,70,.35));animation:popIn .7s cubic-bezier(.3,1.7,.5,1)}
+#wearShow .ribbon2{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 12vh);background:var(--pink);color:#fff;font-weight:700;font-size:clamp(24px,5vmin,48px);padding:6px 28px 8px;border-radius:999px;border:4px solid #fff;box-shadow:0 6px 0 rgba(30,20,70,.25);animation:popIn .6s .3s cubic-bezier(.3,1.7,.5,1) backwards}
+
+/* flight to a trip */
+#flight{position:absolute;inset:0;z-index:47;overflow:hidden;background:linear-gradient(180deg,#5fb6ff,#a9dcff 60%,#e3f4ff)}
+#flight .cl{position:absolute;left:100%;height:calc(var(--h) * 1px);width:calc(var(--h) * 2.4px);background:#fff;border-radius:999px;opacity:.9;animation:fly var(--s) linear infinite;animation-delay:var(--d);top:var(--t)}
+#flight .cl::before{content:"";position:absolute;width:55%;height:120%;left:18%;bottom:30%;background:#fff;border-radius:50%}
+@keyframes fly{to{transform:translateX(calc(-100vw - 400px))}}
+#flight .plane{position:absolute;top:28%;left:0;width:min(62vmin,520px);animation:planeGo 5.2s cubic-bezier(.4,0,.6,1) forwards}
+#flight .plane .pimg{width:100%;display:block;transform:scaleX(-1)}
+#flight .plane .fig{position:absolute;height:52%;left:30%;bottom:62%;}
+#flight .bob{animation:bobPlane 1s ease-in-out infinite}
+@keyframes bobPlane{50%{transform:translateY(-14px) rotate(-3deg)}}
+@keyframes planeGo{from{transform:translateX(-70vmin)}to{transform:translateX(calc(100vw + 10vmin))}}
+#flight .dest{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10vh);transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:#fff;color:var(--ink);font-weight:700;font-size:clamp(26px,6vmin,58px);padding:8px 30px 10px;border-radius:999px;box-shadow:0 8px 0 rgba(30,20,70,.2);white-space:nowrap;animation:popIn .6s .6s cubic-bezier(.3,1.7,.5,1) backwards}
+#flight .dest svg{width:1em;height:1em}
+
+/* passport stamp on trip postcards */
+.stamp{position:absolute;right:4%;top:16%;width:clamp(110px,22vmin,210px);aspect-ratio:1;border-radius:50%;border:clamp(4px,.8vmin,8px) dashed #e2265f;color:#e2265f;background:rgba(255,255,255,.82);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:700;line-height:1.05;font-size:clamp(14px,2.8vmin,26px);padding:8px;
+  transform:rotate(-14deg);opacity:0;animation:stampIn .5s 1.4s cubic-bezier(.2,1.4,.4,1) forwards}
+.stamp svg{width:28%;height:auto}
+.stamp small{font-size:.6em;letter-spacing:.08em;text-transform:uppercase}
+@keyframes stampIn{from{opacity:0;transform:scale(3) rotate(10deg)}to{opacity:1;transform:scale(1) rotate(-14deg)}}
+
+/* album tabs and clothes */
+.tabs{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.tab{padding:8px 18px;border-radius:999px;background:rgba(255,255,255,.6);font-weight:700;font-size:clamp(16px,3vmin,24px);border:3px solid transparent}
+.tab.on{background:#fff;border-color:var(--pink);color:var(--pink)}
+.slotRow{margin:0 0 18px}
+.slotRow h3{margin:0 0 8px;font-size:clamp(18px,3vmin,26px)}
+.wgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:12px}
+.wtile{position:relative;aspect-ratio:1;border-radius:20px;background:#fff;border:4px solid #fff;box-shadow:0 5px 0 rgba(53,36,110,.15);display:grid;place-items:center;padding:12px}
+.wtile img{width:100%;height:100%;object-fit:contain}
+.wtile span{position:absolute;bottom:4px;left:4px;right:4px;font-size:13px;font-weight:600;text-align:center;line-height:1.1}
+.wtile.on{border-color:var(--mint);box-shadow:0 0 0 4px var(--mint),0 5px 0 rgba(53,36,110,.15)}
+.wtile.locked{background:rgba(255,255,255,.5);border-style:dashed;border-color:rgba(166,120,255,.5);box-shadow:none}
+.wtile.locked svg{width:55%;opacity:.45}
+
+/* gift */
 #present{position:absolute;inset:0;z-index:36;display:grid;place-items:center;background:rgba(53,36,110,.3)}
 #present button{width:min(46vmin,300px);aspect-ratio:1;animation:dropIn .8s cubic-bezier(.3,1.5,.5,1)}
 #present svg{width:100%;height:100%;overflow:visible}
@@ -204,9 +263,9 @@ img{-webkit-user-drag:none;user-select:none}
   animation:letter 1.6s ease-in-out infinite,popIn .6s cubic-bezier(.3,1.8,.5,1) backwards;animation-delay:var(--d),var(--d)}
 @keyframes letter{50%{transform:translateY(-14%) rotate(-4deg)}}
 #cast{display:flex;align-items:flex-end;justify-content:center;gap:1vmin;height:min(36vh,320px)}
-#cast img{height:100%;object-fit:contain;filter:drop-shadow(0 12px 10px rgba(53,36,110,.3));animation:hover 2.4s ease-in-out infinite}
-#cast img.f{height:46%;animation-delay:-.8s}
-#cast img.f:last-child{animation-delay:-1.6s}
+#cast .f{height:46%;object-fit:contain;filter:drop-shadow(0 12px 10px rgba(53,36,110,.3));animation:hover 2.4s ease-in-out infinite;animation-delay:-.8s}
+#cast .f:last-child{animation-delay:-1.6s}
+#cast .fig{filter:drop-shadow(0 12px 10px rgba(53,36,110,.3));animation:hover 2.4s ease-in-out infinite}
 @keyframes hover{50%{transform:translateY(-14px) rotate(2deg)}}
 .startBtns{display:flex;align-items:center;gap:clamp(16px,4vmin,40px)}
 #playBtn{width:clamp(110px,20vmin,170px);aspect-ratio:1;border-radius:50%;background:var(--pink);border:7px solid #fff;display:grid;place-items:center;animation:beacon 1.6s ease-out infinite}
@@ -234,6 +293,7 @@ img{-webkit-user-drag:none;user-select:none}
 
   <div id="hud" hidden>
     <div id="gifts" aria-label="Stars"></div>
+    <div id="chip" hidden></div>
     <div id="say" aria-live="polite"><div id="sayInner"></div></div>
     <div class="hudBtns">
       <button class="round" id="albumBtn" aria-label="Robo's adventures">
@@ -251,7 +311,7 @@ img{-webkit-user-drag:none;user-select:none}
   <div id="stage" hidden>
     <div id="roboCell">
       <div id="robo" role="button" aria-label="Robo the robot. Tap to play with Robo.">
-        <div id="roboFloat"><img id="roboImg" alt="Robo the robot"></div>
+        <div id="roboFloat"><div id="roboFig"><img id="roboImg" alt="Robo the robot"></div></div>
       </div>
     </div>
     <div id="play"></div>
@@ -261,6 +321,8 @@ img{-webkit-user-drag:none;user-select:none}
   <img class="friend l" id="friendL" alt="">
   <div id="bigNum"><span></span></div>
   <div id="present" hidden></div>
+  <div id="wearShow" hidden></div>
+  <div id="flight" hidden></div>
   <div id="postcard" hidden></div>
   <div id="album" hidden></div>
 
@@ -297,7 +359,7 @@ let DATA = null, VOICE = {};
 
 /* ================= saved progress ================= */
 const KEY = 'robo-count-nusaybah-v2';
-let S = { round: 0, progress: 0, lastN: 0, advOrder: null, advNext: 0, got: [], seen: [] };
+let S = { round: 0, progress: 0, lastN: 0, advOrder: null, advNext: 0, got: [], seen: [], wear: {}, owned: [], trip: null };
 try { const s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s) S = Object.assign(S, s); } catch (e) {}
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
 
@@ -453,10 +515,18 @@ function loadImg(src) {
   return imgCache[src] = new Promise(res => { const i = new Image(); i.onload = () => (i.decode ? i.decode().catch(() => {}) : Promise.resolve()).then(() => res(i)); i.onerror = () => res(null); i.src = src; });
 }
 let bgFront = $('#bgA'), bgBack = $('#bgB'), bgNow = null;
-async function setBg(scene) {
-  if (!scene || scene === bgNow || (DATA && !DATA.scenes.includes(scene))) return; bgNow = scene;
-  const im = await loadImg('img/bg/' + scene + '.webp'); if (!im || bgNow !== scene) return;
+async function setBgSrc(src) {
+  if (!src || src === bgNow) return; bgNow = src;
+  const im = await loadImg(src); if (!im || bgNow !== src) return;
   bgBack.src = im.src; bgBack.classList.add('on'); bgFront.classList.remove('on'); [bgFront, bgBack] = [bgBack, bgFront];
+}
+function setBg(scene) { if (!scene || (DATA && !DATA.scenes.includes(scene))) return; return setBgSrc('img/bg/' + scene + '.webp'); }
+// while Robo is on a trip, the next rounds happen at that place
+function roundBg(scene) { if (S.trip && S.trip.left > 0) return setBgSrc('img/trip/' + S.trip.id + '.webp'); return setBg(scene); }
+function updateChip() {
+  const c = $('#chip'), a = S.trip && DATA && DATA.adventures.find(x => x.id === S.trip.id);
+  if (!a || !(S.trip.left > 0)) { c.hidden = true; return; }
+  c.innerHTML = PIN + '<span>' + a.cap.split(' \u00b7 ')[0] + '</span>'; c.hidden = false;
 }
 
 /* ================= Robo ================= */
@@ -475,6 +545,27 @@ const robo = {
   mouth() { const r = RI.getBoundingClientRect(); return { x: r.left + r.width * .5, y: r.top + r.height * .25 }; },
 };
 setInterval(() => { if (robo.talk) { robo.flip = !robo.flip; robo.render(); } }, 150);
+
+/* Robo's clothes: drawn on top of every pose */
+const SLOTZ = { back: 0, feet: 2, dress: 3, neck: 4, eyes: 5, head: 6 };
+let WEAR = {};
+function wearList() { return Object.entries(S.wear || {}).map(([slot, id]) => WEAR[id]).filter(Boolean); }
+function wearImg(it, pop) { return `<img class="wear${pop ? ' pop' : ''}" alt="" src="img/wear/${it.id}.webp" style="--x:${it.x};--y:${it.y};--w:${it.w};--oy:${it.oy};--r:${it.r}deg;z-index:${SLOTZ[it.slot]}">`; }
+function figHTML(pose) {
+  const l = wearList();
+  return `<div class="fig">${l.filter(i => i.slot === 'back').map(i => wearImg(i)).join('')}<img class="rb" alt="Robo" src="img/robo/${pose}.webp">${l.filter(i => i.slot !== 'back').map(i => wearImg(i)).join('')}</div>`;
+}
+function dressRobo(popId) {
+  const fig = $('#roboFig'); fig.querySelectorAll('.wear').forEach(e => e.remove());
+  for (const it of wearList()) {
+    const t = document.createElement('template'); t.innerHTML = wearImg(it, it.id === popId); const im = t.content.firstChild;
+    if (it.slot === 'back') fig.insertBefore(im, RI); else fig.appendChild(im);
+  }
+}
+function dressCast() {
+  const f = DATA.friends, c = $('#cast');
+  c.innerHTML = (f[0] ? `<img class="f" src="img/friend/${f[0]}.webp" alt="Pip">` : '') + figHTML('wave') + (f[1] ? `<img class="f" src="img/friend/${f[1]}.webp" alt="Luna">` : '');
+}
 (function blink() { setTimeout(() => { if (!robo.talk && !robo.temp && robo.base === 'base') { robo.pose('blink', 150); } blink(); }, rnd(2500, 5000)); })();
 
 let reactDeck = [], reacting = false;
@@ -575,6 +666,15 @@ function exitKeyframes(kind, i, el) {
   }
   return [F([[0, 0], [0, 0, 0, 0, 0]]), 800, 'ease-in'];
 }
+function enterAll(items, kind) {
+  items.forEach((o, i) => {
+    o.classList.add('entering');
+    const [kf, dur] = exitKeyframes(kind, i, o);
+    const a = o.animate(kf.slice().reverse(), { duration: Math.min(1800, dur * .75), delay: i * 100, easing: 'ease-out', fill: 'backwards' });
+    a.finished.then(() => o.classList.remove('entering')).catch(() => {});
+  });
+  setTimeout(() => (sfx[EXIT_SFX[kind]] || sfx.sparkle).call(sfx), 100);
+}
 function exitAll(items, kind) {
   (sfx[EXIT_SFX[kind]] || sfx.sparkle).call(sfx);
   const anims = items.map((o, i) => {
@@ -603,9 +703,9 @@ function pickObject(exclude = []) {
   let k = objDeck.pop(); if (exclude.includes(k) && objDeck.length) k = objDeck.pop();
   S.seen.push(k); return k;
 }
-async function prep(id, g) {
+async function prep(id, g, keepBg) {
   await g(Promise.all([loadSprite('o_' + id), loadImg(objSrc(id))]));
-  const sc = DATA.objects[id].scene; if (sc) setBg(sc);
+  if (!keepBg) roundBg(DATA.objects[id].scene);
 }
 function drawGifts() {
   const g = $('#gifts'); g.innerHTML = '';
@@ -627,12 +727,12 @@ async function finale(id, n, items, g) {
 }
 
 /* --- Tap and count --- */
-function roundTap(n, g) {
+function roundTap(n, g, opts = {}) {
   return new Promise(async (resolve, reject) => {
     try {
-      const id = pickObject(); await prep(id, g);
+      const id = opts.obj || pickObject(); await prep(id, g, opts.keepBg);
       clearPlay(); robo.setBase('base');
-      const { f, items } = spawnField(n, id); play.appendChild(f);
+      const { f, items } = spawnField(n, id); play.appendChild(f); enterAll(items, DATA.objects[id].exit);
       let count = 0, finished = false;
       const idle = idleHelper(() => items.find(o => !o.classList.contains('done')), 'core:tapeach');
       items.forEach(o => o.addEventListener('pointerdown', async e => {
@@ -643,7 +743,7 @@ function roundTap(n, g) {
         finished = true; idle.stop();
         try { await g(say('core:n' + count)); await g(wait(250)); await finale(id, n, items, g); await celebrate(g); resolve(); } catch (err) { reject(err); }
       }));
-      await g(say(`o_${id}:intro`));
+      await g(say(opts.intro || `o_${id}:intro`));
       if (!finished && count === 0) await g(say('core:tapeach'));
     } catch (err) { reject(err); }
   });
@@ -664,7 +764,7 @@ function roundHowMany(n, g) {
     try {
       const id = pickObject(); await prep(id, g);
       clearPlay(); robo.setBase('base');
-      const { f, items } = spawnField(n, id); play.appendChild(f);
+      const { f, items } = spawnField(n, id); play.appendChild(f); enterAll(items, DATA.objects[id].exit);
       const opts = new Set([n]);
       for (const v of shuffle([n - 1, n + 1, n - 2, n + 2, n + 3].filter(v => v >= 1 && v <= 10))) { if (opts.size >= 3) break; opts.add(v); }
       const ans = document.createElement('div'); ans.className = 'answers';
@@ -706,7 +806,7 @@ function roundHowMany(n, g) {
 function roundFeed(n, g) {
   return new Promise(async (resolve, reject) => {
     try {
-      const id = pick(DATA.feed); await prep(id, g); setBg('kitchen');
+      const id = pick(DATA.feed); await prep(id, g, true); roundBg('kitchen');
       clearPlay();
       const sign = document.createElement('div'); sign.className = 'sign';
       sign.innerHTML = `<span class="num">${n}</span><div class="mini">${Array.from({ length: n }, () => `<img src="${objSrc(id)}" alt="">`).join('')}</div>`;
@@ -746,8 +846,8 @@ function roundFeed(n, g) {
   });
 }
 
-/* --- presents and adventures --- */
-function presentSVG() {
+/* --- gifts: something new for Robo to wear, or a trip / adventure --- */
+function giftSVG() {
   return `<svg viewBox="0 0 200 200"><g class="box">
     <rect x="30" y="80" width="140" height="110" rx="12" fill="#a678ff"/><rect x="88" y="80" width="24" height="110" fill="#ffd23f"/>
     <g class="lid"><rect x="20" y="58" width="160" height="34" rx="10" fill="#c3a8ff"/><rect x="88" y="58" width="24" height="34" fill="#ffd23f"/>
@@ -759,51 +859,118 @@ function advOrder() {
   if (S.advOrder && S.advOrder.length === ids.length && S.advOrder.every(i => ids.includes(i))) return S.advOrder;
   const places = shuffle(DATA.adventures.filter(a => a.cat === 'place').map(a => a.id)), others = shuffle(DATA.adventures.filter(a => a.cat !== 'place').map(a => a.id));
   const got = new Set(S.got), out = [];
-  while (places.length || others.length) { if (others.length) out.push(others.pop()); if (places.length) out.push(places.pop()); }
+  while (places.length || others.length) { if (places.length) out.push(places.pop()); if (others.length) out.push(others.pop()); }
   S.advOrder = [...out.filter(i => got.has(i)), ...out.filter(i => !got.has(i))]; S.advNext = Math.min(S.advNext, S.advOrder.length);
   return S.advOrder;
 }
-const PIN = '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" fill="#fff"/><circle cx="12" cy="9" r="2.6" fill="#ff5fa8"/></svg>';
+const PIN = '<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7z" fill="currentColor"/><circle cx="12" cy="9" r="2.6" fill="#fff"/></svg>';
+const placeName = a => a.cap.split(' \u00b7 ').pop();
+
 function showPostcard(a, isNew, g) {
   return new Promise(async res => {
     await loadSprite('adv');
     const P = $('#postcard'); const im = await loadImg('img/adv/' + a.id + '.webp');
-    P.innerHTML = `<div class="card"><img src="${im ? im.src : ''}" alt="${a.cap}"><div class="ribbon">${a.cat === 'place' ? PIN : ''}<span>${a.cap}</span></div>${isNew ? '<div class="new">New!</div>' : ''}</div>`;
+    const place = a.cat === 'place';
+    P.innerHTML = `<div class="card"><img src="${im ? im.src : ''}" alt="${a.cap}"><div class="ribbon">${place ? PIN : ''}<span>${a.cap}</span></div>${isNew ? '<div class="new">New!</div>' : ''}
+      ${place ? `<div class="stamp">${PIN}<span>${placeName(a)}</span><small>Robo was here</small></div>` : ''}</div>`;
     P.hidden = false; confetti(); sfx.tada();
+    if (place) setTimeout(() => { sfx.noise(.12, 400, 120, .5); sfx.tone(90, .25, 'sine', .4, 50); const st = P.querySelector('.stamp'); if (st) { const c = center(st); burst(c.x, c.y, 18, { colors: ['#e2265f', '#ff5fa8'] }); } }, 1600);
     const done = () => { P.hidden = true; P.innerHTML = ''; res(); };
     let closed = false;
     const btn = document.createElement('button'); btn.id = 'cardGo'; btn.setAttribute('aria-label', 'Next');
     btn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     btn.addEventListener('click', e => { e.stopPropagation(); if (closed) return; closed = true; stopVoice(); done(); });
-    P.querySelector('.card').addEventListener('pointerdown', e => { const c = { x: e.clientX, y: e.clientY }; burst(c.x, c.y, 14); sfx.sparkle(); });
+    P.querySelector('.card').addEventListener('pointerdown', e => { burst(e.clientX, e.clientY, 14); sfx.sparkle(); });
     await wait(900);
     const sp = say('adv:' + a.id);
     setTimeout(() => { if (!closed) P.querySelector('.card').appendChild(btn); }, 1200);
     await sp;
-    if (g) { await wait(4500); if (!closed) { closed = true; done(); } }
+    if (g) { await wait(2600); if (!closed) { closed = true; done(); } }
   });
 }
-async function maybePresent(g) {
+
+// Robo flies to the place on an aeroplane, wearing their clothes
+async function flight(a, g) {
+  const F = $('#flight'); let clouds = '';
+  for (let i = 0; i < 10; i++) clouds += `<div class="cl" style="--h:${ri(40, 110)};--s:${rnd(1.6, 3.2).toFixed(2)}s;--d:${(-rnd(0, 3)).toFixed(2)}s;--t:${ri(2, 90)}%"></div>`;
+  F.innerHTML = `${clouds}<div class="plane"><div class="bob"><img class="pimg" src="img/obj/aeroplane.webp" alt="">${figHTML('cheer')}</div></div>
+    <div class="dest">${PIN}<span>${placeName(a)}</span></div>`;
+  F.hidden = false; sfx.engine(); sfx.whoosh();
+  const t = setInterval(() => sfx.whoosh(), 1500);
+  try { await g(Promise.all([say('trip:go_' + a.id), wait(5000)])); }
+  finally { clearInterval(t); F.hidden = true; F.innerHTML = ''; }
+}
+
+// After the postcard, play inside the place: count the things that live there
+async function adventureGift(a, isNew, g) {
+  const place = a.cat === 'place';
+  await g(Promise.all([loadSprite('trip'), loadSprite('adv')]));
+  if (place && DATA.flights.includes(a.id)) { robo.pose('cheer', 2000); await g(say('core:trip')); await g(flight(a, g)); }
+  await g(showPostcard(a, isNew, g));
+  const obj = DATA.advCount[a.id];
+  if (obj && DATA.objects[obj]) {
+    await setBgSrc('img/adv/' + a.id + '.webp');
+    $('#stage').classList.add('scene');
+    try { await g(roundTap(pickN(), g, { obj, intro: 'trip:cnt_' + a.id, keepBg: true })); }
+    finally { $('#stage').classList.remove('scene'); }
+  }
+  if (place && DATA.trips.includes(a.id)) { S.trip = { id: a.id, left: 3 }; save(); updateChip(); }
+}
+
+function nextWear() {
+  const owned = new Set(S.owned), c = [];
+  for (const items of Object.values(DATA.wardrobe)) { const nx = items.find(it => !owned.has(it.id)); if (nx) c.push(nx); }
+  return c.length ? pick(c) : null;
+}
+async function wearGift(it, g) {
+  await g(loadSprite('wear'));
+  const W = $('#wearShow');
+  W.innerHTML = `<div class="rays"></div><img src="img/wear/${it.id}.webp" alt="${it.cap}"><div class="ribbon2">${it.cap}</div>`;
+  W.hidden = false; sfx.sparkle(); confetti(); robo.pose('wow', 3000);
+  await g(say('core:wearnew'));
+  await g(say('wear:' + it.id));
+  // the new thing flies onto Robo
+  const im = W.querySelector('img'), from = im.getBoundingClientRect(), fr = $('#roboFig').getBoundingClientRect();
+  const nat = im.naturalHeight / Math.max(1, im.naturalWidth), tw = fr.width * it.w, th = tw * nat;
+  const fw = Math.min(from.width, from.height / nat);
+  const tx = fr.left + fr.width * it.x, ty = fr.top + fr.height * it.y + (0.5 - it.oy) * th;
+  W.querySelector('.rays').remove(); W.querySelector('.ribbon2').remove(); W.style.background = 'transparent';
+  sfx.whoosh();
+  await g(im.animate([{ transform: 'none' }, { transform: `translate(${tx - (from.left + from.width / 2)}px,${ty - (from.top + from.height / 2)}px) rotate(${it.r}deg) scale(${tw / fw})` }],
+    { duration: 850, easing: 'cubic-bezier(.5,0,.3,1)', fill: 'forwards' }).finished);
+  W.hidden = true; W.innerHTML = ''; W.style.background = '';
+  if (!S.owned.includes(it.id)) S.owned.push(it.id);
+  S.wear[it.slot] = it.id; save(); dressRobo(it.id);
+  const c = center(RI); burst(c.x, c.y - 40, 40, { speed: 12 }); sfx.tada(); robo.pose('love', 2500); robo.anim('jump', 950);
+  await g(say('core:wearit'));
+}
+async function maybeGift(g) {
   if (S.progress < 2) return;
   S.progress = 0; drawGifts(); save();
   clearPlay();
-  const order = advOrder(); if (!order.length) return;
-  const a = DATA.adventures.find(x => x.id === order[S.advNext % order.length]);
-  loadImg('img/adv/' + a.id + '.webp'); loadSprite('adv');
-  const P = $('#present'); P.className = ''; P.innerHTML = `<button aria-label="Open the present">${presentSVG()}</button>`; P.hidden = false;
+  const wearNext = nextWear(), order = advOrder();
+  const advFresh = order.some(i => !S.got.includes(i));
+  const doWear = !!wearNext && (S.owned.length === 0 || !advFresh || Math.random() < .5);
+  const a = doWear ? null : DATA.adventures.find(x => x.id === order[S.advNext % order.length]);
+  if (a) { loadImg('img/adv/' + a.id + '.webp'); loadSprite('adv'); loadSprite('trip'); if (DATA.advCount[a.id]) { loadSprite('o_' + DATA.advCount[a.id]); loadImg(objSrc(DATA.advCount[a.id])); } }
+  else { loadImg('img/wear/' + wearNext.id + '.webp'); loadSprite('wear'); }
+  const P = $('#present'); P.className = ''; P.innerHTML = `<button aria-label="Open the gift">${giftSVG()}</button>`; P.hidden = false;
   sfx.whoosh(); robo.pose('wow', 2500);
   await g(say('core:present'));
   await g(new Promise(res => {
-    const btn = P.querySelector('button'); let t = setTimeout(go, 10000); let n = 0;
-    const nag = setInterval(() => { if (n++ < 2 && !voice) say('core:tapgift'); }, 4000);
+    const btn = P.querySelector('button'); let n = 0;
+    const t = setTimeout(go, 10000), nag = setInterval(() => { if (n++ < 2 && !voice) say('core:tapgift'); }, 4000);
     function go() { clearTimeout(t); clearInterval(nag); btn.removeEventListener('click', go); res(); }
     btn.addEventListener('click', go);
   }));
   P.classList.add('open'); sfx.sparkle(); const c = center(P.querySelector('button')); burst(c.x, c.y - 30, 70, { speed: 15, size: 16 });
   await g(wait(800)); P.hidden = true;
-  const isNew = !S.got.includes(a.id);
-  if (isNew) S.got.push(a.id); S.advNext++; save();
-  await g(showPostcard(a, isNew, g));
+  if (doWear) await wearGift(wearNext, g);
+  else {
+    const isNew = !S.got.includes(a.id);
+    if (isNew) S.got.push(a.id); S.advNext++; save();
+    await adventureGift(a, isNew, g);
+  }
   robo.pose('love', 2000);
 }
 
@@ -811,7 +978,8 @@ const MODES = ['tap', 'tap', 'tap', 'howmany', 'tap', 'tap', 'feed', 'tap', 'tap
 async function gameLoop() {
   const id = ++runId, g = guard(id);
   try {
-    drawGifts(); setBg(pick(['park', 'garden', 'rainbow', 'playground']));
+    drawGifts(); updateChip(); dressRobo();
+    if (!(S.trip && S.trip.left > 0)) setBg(pick(['park', 'garden', 'rainbow', 'playground'])); else roundBg();
     robo.pose('wave', 3500);
     await g(say(S.round > 0 ? 'core:welcome' : 'core:hello'));
     await g(say('core:letsgo'));
@@ -820,26 +988,44 @@ async function gameLoop() {
       if (mode === 'tap') await g(roundTap(n, g));
       else if (mode === 'howmany') await g(roundHowMany(n, g));
       else await g(roundFeed(n, g));
-      S.round++; S.progress++; drawGifts(); save();
+      S.round++; S.progress++;
+      if (S.trip && S.trip.left > 0) { S.trip.left--; if (!S.trip.left) { S.trip = null; updateChip(); } }
+      drawGifts(); save();
       robo.setBase('base');
       await g(wait(400));
-      await maybePresent(g);
+      await maybeGift(g);
       clearPlay(); await g(wait(300));
     }
   } catch (e) { if (e !== CANCEL) console.error(e); }
 }
 
-/* ================= album ================= */
-function openAlbum() {
-  const A = $('#album'), got = new Set(S.got);
-  const list = DATA.adventures;
-  A.innerHTML = `<header><h2>Robo's Adventures<small>${got.size} of ${list.length} found</small></h2>
+/* ================= album: trips and clothes ================= */
+const SLOT_NAMES = { head: 'Hats and hair', eyes: 'Glasses', neck: 'Neck', dress: 'Dresses', back: 'Wings', feet: 'Shoes' };
+function openAlbum(tab = 'trips') {
+  const A = $('#album'), got = new Set(S.got), owned = new Set(S.owned), list = DATA.adventures;
+  const nWear = Object.values(DATA.wardrobe).reduce((t, v) => t + v.length, 0);
+  let body = '';
+  if (tab === 'trips') {
+    body = `<div class="grid">${list.filter(a => got.has(a.id)).map(a => `<button class="tile" data-id="${a.id}"><img loading="lazy" src="img/adv/${a.id}.webp" alt=""><span>${a.cap}</span></button>`).join('')}
+      ${list.filter(a => !got.has(a.id)).slice(0, 12).map(() => `<div class="tile locked"><svg viewBox="0 0 200 200">${giftSVG().replace(/<\/?svg[^>]*>/g, '')}</svg></div>`).join('')}</div>`;
+  } else {
+    body = Object.entries(DATA.wardrobe).filter(([, v]) => v.length).map(([slot, items]) => `<div class="slotRow"><h3>${SLOT_NAMES[slot] || slot}</h3><div class="wgrid">
+      ${items.map(it => owned.has(it.id) ? `<button class="wtile${S.wear[slot] === it.id ? ' on' : ''}" data-w="${it.id}"><img src="img/wear/${it.id}.webp" alt=""><span>${it.cap}</span></button>`
+        : `<div class="wtile locked"><svg viewBox="0 0 200 200">${giftSVG().replace(/<\/?svg[^>]*>/g, '')}</svg></div>`).join('')}</div></div>`).join('');
+  }
+  A.innerHTML = `<header><h2>Robo's Treasures<small>${got.size} of ${list.length} trips · ${owned.size} of ${nWear} clothes</small></h2>
     <button class="round" id="albumClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="#35246e" stroke-width="3" stroke-linecap="round"/></svg></button></header>
-    <div class="grid">${list.filter(a => got.has(a.id)).map(a => `<button class="tile" data-id="${a.id}"><img loading="lazy" src="img/adv/${a.id}.webp" alt=""><span>${a.cap}</span></button>`).join('')}
-    ${list.filter(a => !got.has(a.id)).slice(0, 12).map(() => `<div class="tile locked"><svg viewBox="0 0 200 200">${presentSVG().replace(/<\/?svg[^>]*>/g, '')}</svg></div>`).join('')}</div>`;
-  A.hidden = false; if (ctx) { loadSprite('adv'); if (got.size) say('core:album'); }
+    <div class="tabs"><button class="tab${tab === 'trips' ? ' on' : ''}" data-tab="trips">Trips and fun</button><button class="tab${tab === 'clothes' ? ' on' : ''}" data-tab="clothes">Robo's clothes</button></div>${body}`;
+  A.hidden = false;
+  if (ctx) { loadSprite('adv'); loadSprite('wear'); }
   $('#albumClose').addEventListener('click', e => { e.stopPropagation(); stopVoice(); A.hidden = true; });
+  A.querySelectorAll('.tab').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); openAlbum(b.dataset.tab); if (ctx && b.dataset.tab === 'clothes') say('core:clothes'); }));
   A.querySelectorAll('.tile[data-id]').forEach(t => t.addEventListener('click', e => { e.stopPropagation(); initAudio(); showPostcard(list.find(a => a.id === t.dataset.id), false, null); }));
+  A.querySelectorAll('.wtile[data-w]').forEach(t => t.addEventListener('click', e => {
+    e.stopPropagation(); initAudio(); const it = WEAR[t.dataset.w];
+    S.wear[it.slot] = it.id; save(); dressRobo(it.id); dressCast(); sfx.sparkle(); burst(e.clientX, e.clientY, 16);
+    loadSprite('wear').then(() => say('wear:' + it.id)); openAlbum('clothes');
+  }));
 }
 
 /* ================= start / home ================= */
@@ -852,8 +1038,8 @@ async function boot() {
     const [d, v] = await Promise.all([fetch('game.json').then(r => r.json()), fetch('voice/voice.json').then(r => r.json())]);
     DATA = d; VOICE = v;
   } catch (e) { $('#loadMsg').textContent = 'Could not load the game files.'; return; }
-  const f = DATA.friends;
-  $('#cast').innerHTML = (f[0] ? `<img class="f" src="img/friend/${f[0]}.webp" alt="Pip">` : '') + `<img src="img/robo/wave.webp" alt="Robo">` + (f[1] ? `<img class="f" src="img/friend/${f[1]}.webp" alt="Luna">` : '');
+  for (const [slot, items] of Object.entries(DATA.wardrobe || {})) items.forEach(it => { WEAR[it.id] = Object.assign({ slot }, it); });
+  dressCast(); dressRobo();
   setBg('rainbow');
   DATA.poses.forEach(p => loadImg('img/robo/' + p + '.webp'));
   robo.render();
@@ -880,7 +1066,8 @@ $('#albumBtn').addEventListener('click', e => { e.stopPropagation(); openAlbum()
 $('#homeBtn').addEventListener('click', e => {
   e.stopPropagation(); runId++; stopVoice(); clearPlay(); robo.setBase('base');
   $('#present').hidden = true; $('#postcard').hidden = true; $('#sayInner').classList.remove('show');
-  $('#hud').hidden = true; $('#stage').hidden = true; $('#start').hidden = false; setBg('rainbow');
+  $('#wearShow').hidden = true; $('#flight').hidden = true; $('#flight').innerHTML = ''; $('#stage').classList.remove('scene');
+  $('#hud').hidden = true; $('#stage').hidden = true; $('#start').hidden = false; setBg('rainbow'); dressCast();
 });
 $('#musicBtn').addEventListener('click', e => {
   e.stopPropagation(); musicOn = !musicOn; $('#musicBtn').classList.toggle('off', !musicOn);
