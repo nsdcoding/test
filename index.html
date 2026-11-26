@@ -995,7 +995,7 @@ async function journey(a, g) {
   }
   const sit = { air: '58%', land: '52%', animal: '74%', sea: '50%' }[v.kind], fz = (v.kind === 'land' || v.kind === 'sea') ? 0 : 2;
   F.innerHTML = `${deco}<div class="veh ${v.kind}" style="--sit:${sit};--fz:${fz}"><div class="bob">${figHTML('cheer')}${buddy.id ? `<img class="bud" src="img/friend/${buddy.id}.webp" alt="">` : ''}<img class="pimg${v.flip ? ' flip' : ''}" src="img/obj/${v.o}.webp" alt=""></div></div>
-    <div class="dest">${PIN}<span>${placeName(a)}</span></div>`;
+    <div class="dest">${PIN}<span>${a.cap}</span></div>`;
   F.hidden = false;
   const fx = {
     air: () => sfx.whoosh(), land: () => sfx.engine(), sea: () => sfx.bubbles(),
