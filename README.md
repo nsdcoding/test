@@ -1,18 +1,19 @@
 # Nusaybah's Robot Counting
 
-A counting game for a 3-year-old, starring Robo the robot.
+A counting and first-words game for a 3-year-old, starring Robo the robot and friends Pip, Luna and Bolt.
 
-Open `index.html` in a browser (the `audio/` folder must sit next to it), tap the big pink Play button, and turn the sound on.
+Open `index.html` through a web server (it loads `game.json`, `img/` and `voice/` next to it), tap the big pink Play button and turn the sound on.
 
 ## How it plays
 
-- **Tap & count**: tap each star, balloon, apple, fish, heart, flower or donut. Robo says each number out loud.
-- **How many?**: look at the objects and tap the right number. If she picks a wrong one, Robo counts with her and the right answer glows.
-- **Feed Robo**: Robo asks for a number of gears. Each gear she taps flies into Robo's mouth.
-- Every 3 rounds earn a present. Robo gets a new outfit piece: bow, crown, glasses, rainbow wings, heart, party hat.
+- **Tap & count** (most rounds): animals, fruits, food, vehicles, sky things, toys and people appear in their own scene (cats in the living room, fish under the sea, cars on the road). Each tap says the number. At the end Robo says the number and the name ("Six ducks!"), then they leave in their own funny way: ducks waddle, rabbits hop, fish swim, cars zoom, rockets blast off, with a sound to match ("Quack, quack!").
+- **How many?**: count, then tap the number. On a wrong answer Robo counts with her, and numbers pop up on each thing.
+- **Feed Robo**: "Give Robo three bananas!" Each food she taps flies into Robo's mouth.
+- **Presents**: every 2 rounds a present opens a picture of a new Robo adventure: home life (brushing teeth, bath, bedroom, kitchen, fridge), rides (car, plane, train, rocket), pets, outfits, play, and trips to monuments in India and around the world ("I am at the Taj Mahal, in India!"). They never run out and are kept in the photo album (yellow button).
+- **Tap Robo** for 12 different reactions: giggles, silly face, dizzy spin, hearts, sneeze, sleepy, dance, peekaboo and more.
 - Numbers start at 1–3 and slowly grow to 10. Progress is saved in the browser.
-- Tapping Robo makes them giggle. Tapping anywhere makes sparkles.
 
-## Voice
+## How it was made
 
-All spoken lines are in `audio/`, generated with Google Cloud Text-to-Speech, voice `en-US-Chirp3-HD-Leda`, at a slow 0.85 speaking rate.
+- Pictures: Google Nano Banana models (Gemini image generation). Robo's poses and all adventure pictures use the main Robo design as a reference, so Robo looks the same everywhere.
+- Voice: Google Cloud Text-to-Speech, voice `en-US-Chirp3-HD-Leda`, speaking rate 0.85. Lines are packed into one MP3 per group in `voice/`, with start times in `voice/voice.json`.
