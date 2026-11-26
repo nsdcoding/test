@@ -65,6 +65,7 @@ img{-webkit-user-drag:none;user-select:none}
 .fig .rb{position:relative;z-index:1;width:100%;height:100%;display:block;object-fit:contain}
 .wear{position:absolute;left:calc(var(--x) * 100%);top:calc(var(--y) * 100%);width:calc(var(--w) * 100%);height:auto;max-width:none;
   transform:translate(-50%,calc(var(--oy) * -100%)) rotate(var(--r));pointer-events:none;filter:drop-shadow(0 2px 2px rgba(53,36,110,.25))}
+.wear.full{left:0;top:0;width:100%;height:100%;transform:none;filter:none}
 .wear.pop{animation:wearPop .8s cubic-bezier(.3,1.8,.5,1)}
 @keyframes wearPop{from{scale:2.4;opacity:0}}
 @keyframes float{50%{transform:translateY(-12px)}}
@@ -93,7 +94,7 @@ img{-webkit-user-drag:none;user-select:none}
 #robo.bounce #roboFig{animation:rjump .7s cubic-bezier(.3,1.4,.5,1) 2}
 
 #stage.scene{grid-template-columns:1fr}
-#stage.scene #roboCell{display:none}
+
 #play{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(12px,3vmin,26px);min-width:0;min-height:0}
 @media (max-width:640px){
   #hud{flex-wrap:wrap}
@@ -160,6 +161,32 @@ img{-webkit-user-drag:none;user-select:none}
 .friend.up{animation:friendUp 2.6s cubic-bezier(.3,1.5,.5,1) forwards}
 @keyframes friendUp{0%{transform:translateY(120%)}18%{transform:translateY(-6%) rotate(-6deg)}30%{transform:translateY(0) rotate(4deg)}45%{transform:translateY(-14%) rotate(-4deg)}60%{transform:translateY(0)}82%{transform:translateY(0)}100%{transform:translateY(120%)}}
 
+/* Robo's friend who plays alongside */
+#buddy{position:absolute;bottom:0;left:72%;height:44%;aspect-ratio:1;z-index:3;cursor:pointer}
+#stage.scene #robo{visibility:visible}
+#stage.scene #roboFloat{visibility:hidden}
+#buddy .bfloat{width:100%;height:100%;animation:bfloat 2.4s ease-in-out infinite}
+#buddy.pip .bfloat{animation:bhover 1.8s ease-in-out infinite}
+#buddy.luna .bfloat{animation:bsway 3s ease-in-out infinite}
+#buddy.bolt .bfloat{animation:bwag .7s ease-in-out infinite}
+#buddy img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;transform-origin:50% 100%;filter:drop-shadow(0 10px 8px rgba(53,36,110,.3))}
+@keyframes bfloat{50%{transform:translateY(-8%)}}
+@keyframes bhover{0%,100%{transform:translateY(-12%) rotate(-5deg)}50%{transform:translateY(-26%) rotate(5deg)}}
+@keyframes bsway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg) translateY(-4%)}}
+@keyframes bwag{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg) translateY(-3%)}}
+#buddy.enter img{animation:benter 1s cubic-bezier(.3,1.5,.5,1)}
+@keyframes benter{from{transform:translateX(160%) rotate(40deg) scale(.4);opacity:0}}
+#buddy.hop img{animation:bhop .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bhop{40%{transform:translateY(-30%) scale(1.06,.94)}70%{transform:scale(1.08,.9)}}
+#buddy.spin img{animation:bspin 1.1s ease-in-out}
+@keyframes bspin{30%{transform:translateY(-35%) rotate(-20deg)}70%{transform:translateY(-35%) rotate(360deg)}100%{transform:rotate(360deg)}}
+#buddy.talk img{animation:btalk .22s ease-in-out infinite alternate}
+@keyframes btalk{to{transform:scale(1.06,.95) rotate(-2deg)}}
+
+/* living scenes: drifting effects and things flying past */
+#amb{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
+.flyby{position:fixed;left:0;top:0;width:clamp(64px,10vmin,120px);z-index:12;cursor:pointer;filter:drop-shadow(0 8px 6px rgba(53,36,110,.25))}
+
 /* trip location chip */
 #chip{display:flex;align-items:center;gap:6px;background:var(--pink);color:#fff;font-weight:700;font-size:clamp(15px,2.4vmin,22px);padding:8px 16px 8px 10px;border-radius:999px;border:3px solid #fff;box-shadow:0 4px 0 rgba(53,36,110,.18);animation:popIn .5s cubic-bezier(.3,1.7,.5,1);white-space:nowrap;max-width:40vw;overflow:hidden;text-overflow:ellipsis}
 #chip svg{width:1.3em;height:1.3em;flex:none}
@@ -178,7 +205,7 @@ img{-webkit-user-drag:none;user-select:none}
 #flight .cl{position:absolute;left:100%;height:calc(var(--h) * 1px);width:calc(var(--h) * 2.4px);background:#fff;border-radius:999px;opacity:.9;animation:fly var(--s) linear infinite;animation-delay:var(--d);top:var(--t)}
 #flight .cl::before{content:"";position:absolute;width:55%;height:120%;left:18%;bottom:30%;background:#fff;border-radius:50%}
 @keyframes fly{to{transform:translateX(calc(-100vw - 400px))}}
-#flight .plane{position:absolute;top:28%;left:0;width:min(62vmin,520px);animation:planeGo 5.2s cubic-bezier(.4,0,.6,1) forwards}
+
 #flight .plane .pimg{width:100%;display:block;transform:scaleX(-1)}
 #flight .plane .fig{position:absolute;height:52%;left:30%;bottom:62%;}
 #flight .bob{animation:bobPlane 1s ease-in-out infinite}
@@ -186,6 +213,39 @@ img{-webkit-user-drag:none;user-select:none}
 @keyframes planeGo{from{transform:translateX(-70vmin)}to{transform:translateX(calc(100vw + 10vmin))}}
 #flight .dest{position:absolute;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 10vh);transform:translateX(-50%);display:flex;align-items:center;gap:10px;background:#fff;color:var(--ink);font-weight:700;font-size:clamp(26px,6vmin,58px);padding:8px 30px 10px;border-radius:999px;box-shadow:0 8px 0 rgba(30,20,70,.2);white-space:nowrap;animation:popIn .6s .6s cubic-bezier(.3,1.7,.5,1) backwards}
 #flight .dest svg{width:1em;height:1em}
+
+#flight.land,#flight.animal{background:linear-gradient(180deg,#7cc8ff,#bfe6ff 55%,#e9f7ff)}
+#flight.sea{background:linear-gradient(180deg,#7cc8ff,#c7ecff 50%,#e9f7ff)}
+#flight .hills{position:absolute;left:0;right:0;background-repeat:repeat-x;animation:scroll var(--sp) linear infinite}
+#flight .h1{bottom:18%;height:34%;background-image:radial-gradient(ellipse 50% 100% at 50% 100%,#9be7a8 98%,transparent 100%);background-size:46vmin 100%;--sp:9s}
+#flight .h2{bottom:14%;height:24%;background-image:radial-gradient(ellipse 50% 100% at 50% 100%,#6fd68a 98%,transparent 100%);background-size:34vmin 100%;--sp:5s;background-position-x:17vmin}
+@keyframes scroll{to{background-position-x:-200vmin}}
+#flight .road{position:absolute;left:0;right:0;bottom:0;height:16%;background:#7d7a8c;box-shadow:inset 0 8px 0 #66637a}
+#flight .road::after{content:"";position:absolute;left:0;right:0;top:46%;height:8%;background:repeating-linear-gradient(90deg,#fff 0 6vmin,transparent 6vmin 12vmin);animation:roadline .6s linear infinite}
+@keyframes roadline{to{background-position-x:-12vmin}}
+#flight .grass{position:absolute;left:0;right:0;bottom:0;height:16%;background:linear-gradient(#5cc77a,#46b066)}
+#flight .waves{position:absolute;left:0;right:0;background-repeat:repeat-x;animation:scroll var(--sp) linear infinite}
+#flight .w1{bottom:0;height:34%;background:radial-gradient(circle at 50% 0,transparent 47%,#3fa9e8 49%) 0 0/16vmin 100%,linear-gradient(#3fa9e8,#3fa9e8) 0 3vmin/100% 100% no-repeat;--sp:7s}
+#flight .w2{bottom:0;height:20%;background:radial-gradient(circle at 50% 0,transparent 47%,#2b8fd1 49%) 0 0/11vmin 100%,linear-gradient(#2b8fd1,#2b8fd1) 0 2.4vmin/100% 100% no-repeat;--sp:4s;z-index:3}
+#flight .prop{position:absolute;bottom:14%;height:var(--h);left:100%;animation:passby var(--s) linear infinite;animation-delay:var(--d);filter:drop-shadow(0 6px 4px rgba(0,0,0,.15))}
+@keyframes passby{to{transform:translateX(calc(-100vw - 300px))}}
+#flight .veh{position:absolute;left:0;width:min(50vmin,440px);z-index:2;animation:vehGo 6.5s cubic-bezier(.35,0,.65,1) forwards}
+#flight .veh.air{top:24%;width:min(60vmin,520px)}
+#flight .veh.land,#flight .veh.animal{bottom:9%}
+#flight .veh.sea{bottom:14%}
+@keyframes vehGo{from{transform:translateX(-60vmin)}to{transform:translateX(calc(100vw + 8vmin))}}
+#flight .veh .bob{position:relative}
+#flight .veh.air .bob{animation:bobPlane 1s ease-in-out infinite}
+#flight .veh.land .bob{animation:bump .35s ease-in-out infinite}
+#flight .veh.animal .bob{animation:gallop .55s ease-in-out infinite}
+#flight .veh.sea .bob{animation:rock 1.6s ease-in-out infinite}
+@keyframes bump{50%{transform:translateY(-3%)}}
+@keyframes gallop{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-10%) rotate(-4deg)}60%{transform:translateY(-3%) rotate(3deg)}}
+@keyframes rock{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-5%)}}
+#flight .veh .pimg{position:relative;z-index:1;width:100%;display:block}
+#flight .veh .pimg.flip{transform:scaleX(-1)}
+#flight .veh .fig{position:absolute;height:62%;left:30%;bottom:var(--sit);z-index:var(--fz)}
+#flight .veh .bud{position:absolute;height:36%;left:6%;bottom:var(--sit);z-index:var(--fz);animation:bwag .5s ease-in-out infinite}
 
 /* passport stamp on trip postcards */
 .stamp{position:absolute;right:4%;top:16%;width:clamp(110px,22vmin,210px);aspect-ratio:1;border-radius:50%;border:clamp(4px,.8vmin,8px) dashed #e2265f;color:#e2265f;background:rgba(255,255,255,.82);
@@ -290,6 +350,7 @@ img{-webkit-user-drag:none;user-select:none}
   <img class="bgimg" id="bgB" alt="">
   <div id="shade"></div>
   <div id="motes"></div>
+  <canvas id="amb"></canvas>
 
   <div id="hud" hidden>
     <div id="gifts" aria-label="Stars"></div>
@@ -312,6 +373,7 @@ img{-webkit-user-drag:none;user-select:none}
     <div id="roboCell">
       <div id="robo" role="button" aria-label="Robo the robot. Tap to play with Robo.">
         <div id="roboFloat"><div id="roboFig"><img id="roboImg" alt="Robo the robot"></div></div>
+        <div id="buddy" role="button" aria-label="Robo's friend"><div class="bfloat"><img id="buddyImg" alt=""></div></div>
       </div>
     </div>
     <div id="play"></div>
@@ -391,8 +453,9 @@ function say(id, opts = {}) {
   if (!opts.quiet) showSay(opts.text || (meta ? meta[2] : ''));
   return new Promise(resolve => {
     let finished = false;
-    const end = () => { if (finished) return; finished = true; if (voice && voice.id === id) voice = null; robo.talking(false); duck(false); resolve(); };
-    robo.talking(true); duck(true);
+    const who = g.startsWith('f_') ? buddy : robo;
+    const end = () => { if (finished) return; finished = true; if (voice && voice.id === id) voice = null; who.talking(false); duck(false); resolve(); };
+    who.talking(true); duck(true);
     const buf = sprites[g];
     if (buf && meta) {
       const s = ctx.createBufferSource(); s.buffer = buf; s.connect(voiceGain);
@@ -520,9 +583,9 @@ async function setBgSrc(src) {
   const im = await loadImg(src); if (!im || bgNow !== src) return;
   bgBack.src = im.src; bgBack.classList.add('on'); bgFront.classList.remove('on'); [bgFront, bgBack] = [bgBack, bgFront];
 }
-function setBg(scene) { if (!scene || (DATA && !DATA.scenes.includes(scene))) return; return setBgSrc('img/bg/' + scene + '.webp'); }
+function setBg(scene) { if (!scene || (DATA && !DATA.scenes.includes(scene))) return; setMood(scene); return setBgSrc('img/bg/' + scene + '.webp'); }
 // while Robo is on a trip, the next rounds happen at that place
-function roundBg(scene) { if (S.trip && S.trip.left > 0) return setBgSrc('img/trip/' + S.trip.id + '.webp'); return setBg(scene); }
+function roundBg(scene) { if (S.trip && S.trip.left > 0) { setMood('trip'); return setBgSrc('img/trip/' + S.trip.id + '.webp'); } return setBg(scene); }
 function updateChip() {
   const c = $('#chip'), a = S.trip && DATA && DATA.adventures.find(x => x.id === S.trip.id);
   if (!a || !(S.trip.left > 0)) { c.hidden = true; return; }
@@ -550,7 +613,10 @@ setInterval(() => { if (robo.talk) { robo.flip = !robo.flip; robo.render(); } },
 const SLOTZ = { back: 0, feet: 2, dress: 3, neck: 4, eyes: 5, head: 6 };
 let WEAR = {};
 function wearList() { return Object.entries(S.wear || {}).map(([slot, id]) => WEAR[id]).filter(Boolean); }
-function wearImg(it, pop) { return `<img class="wear${pop ? ' pop' : ''}" alt="" src="img/wear/${it.id}.webp" style="--x:${it.x};--y:${it.y};--w:${it.w};--oy:${it.oy};--r:${it.r}deg;z-index:${SLOTZ[it.slot]}">`; }
+function wearImg(it, pop) {
+  if (it.full) return `<img class="wear full${pop ? ' pop' : ''}" alt="" src="img/worn/${it.id}.webp" style="z-index:${SLOTZ[it.slot]}">`;
+  return `<img class="wear${pop ? ' pop' : ''}" alt="" src="img/wear/${it.id}.webp" style="--x:${it.x};--y:${it.y};--w:${it.w};--oy:${it.oy};--r:${it.r}deg;z-index:${SLOTZ[it.slot]}">`;
+}
 function figHTML(pose) {
   const l = wearList();
   return `<div class="fig">${l.filter(i => i.slot === 'back').map(i => wearImg(i)).join('')}<img class="rb" alt="Robo" src="img/robo/${pose}.webp">${l.filter(i => i.slot !== 'back').map(i => wearImg(i)).join('')}</div>`;
@@ -589,12 +655,26 @@ function react() {
 }
 R.addEventListener('pointerdown', e => { e.stopPropagation(); react(); });
 
-/* friends */
+/* friends: one plays beside Robo (the buddy), the others pop up to cheer */
+const BU = $('#buddy'), BI = $('#buddyImg');
+const buddy = {
+  id: null, met: new Set(),
+  set(id) { if (!id || id === this.id) return; this.id = id; BI.src = 'img/friend/' + id + '.webp'; BI.alt = id; BU.className = id; this.anim('enter', 1000); loadSprite('f_' + id); },
+  anim(c, ms = 700) { BU.classList.remove(c); void BU.offsetWidth; BU.classList.add(c); setTimeout(() => BU.classList.remove(c), ms); },
+  talking(on) { BU.classList.toggle('talk', on); },
+  hop() { this.anim('hop', 500); },
+  async line(k) { if (!this.id) return; await loadSprite('f_' + this.id); return say(`f_${this.id}:${k}`); },
+};
+BU.addEventListener('pointerdown', e => {
+  e.stopPropagation(); buddy.anim('spin', 1100); const c = center(BI); burst(c.x, c.y - 30, 16, { shapes: ['star', 'heart'] }); sfx.beep();
+  if (!voice) buddy.line(pick(['giggle', 'giggle', 'love', 'cheer']));
+});
 let friendSide = 0;
 function friendCheer() {
   if (!DATA || !DATA.friends.length) return;
+  const others = DATA.friends.filter(f => f !== buddy.id);
   const el = friendSide++ % 2 ? $('#friendL') : $('#friendR');
-  el.src = 'img/friend/' + pick(DATA.friends) + '.webp';
+  el.src = 'img/friend/' + pick(others.length ? others : DATA.friends) + '.webp';
   el.classList.remove('up'); void el.offsetWidth; el.classList.add('up');
   setTimeout(() => { const c = center(el); burst(c.x, c.y - 30, 14, { shapes: ['star', 'heart'] }); sfx.sparkle(); }, 500);
 }
@@ -680,9 +760,9 @@ function exitAll(items, kind) {
   const anims = items.map((o, i) => {
     o.classList.add('leaving'); o.querySelector('.badge')?.remove();
     const [kf, dur, easing] = exitKeyframes(kind, i, o);
-    if (kind === 'drive' || kind === 'blast') { const c = center(o); setTimeout(() => burst(c.x - 30, c.y + 20, 10, { colors: kind === 'blast' ? ['#ff9b3d', '#ffd23f', '#ff4d6d'] : ['#d8cfc0', '#eee6d6', '#fff'], shapes: ['circle'], angle: kind === 'blast' ? Math.PI / 2 : Math.PI, speed: 5, g: 0 }), 350 + i * 90); }
-    if (kind === 'dance' || kind === 'spin' || kind === 'jump') setTimeout(() => { const c = center(o); burst(c.x, c.y, 16); }, dur - 200 + i * 90);
-    return o.animate(kf, { duration: dur, delay: i * 110, easing, fill: 'forwards' }).finished.catch(() => {});
+    if (kind === 'drive' || kind === 'blast') { const c = center(o); setTimeout(() => burst(c.x - 30, c.y + 20, 10, { colors: kind === 'blast' ? ['#ff9b3d', '#ffd23f', '#ff4d6d'] : ['#d8cfc0', '#eee6d6', '#fff'], shapes: ['circle'], angle: kind === 'blast' ? Math.PI / 2 : Math.PI, speed: 5, g: 0 }), 600 + i * 220); }
+    if (kind === 'dance' || kind === 'spin' || kind === 'jump') setTimeout(() => { const c = center(o); burst(c.x, c.y, 16); }, dur * 1.9 - 300 + i * 220);
+    return o.animate(kf, { duration: dur * 1.9, delay: i * 220, easing, fill: 'forwards' }).finished.catch(() => {});
   });
   return Promise.all(anims);
 }
@@ -714,7 +794,9 @@ function drawGifts() {
 }
 async function celebrate(g) {
   sfx.tada(); confetti(); robo.pose('cheer', 2200); robo.anim('dance', 2600); friendCheer();
-  await g(say('core:praise' + ri(1, 8)));
+  buddy.anim('spin', 1100);
+  await g(say(pick(['core:praise1', 'core:praise2', 'core:praise3', 'core:praise4', 'core:praise5', 'core:praise6', 'core:praise7', 'core:praise8', 'core:nm_good', 'core:nm_star', 'core:nm_wow', 'core:nm_love'])));
+  buddy.hop(); await g(buddy.line(pick(['yay', 'wow', 'clap', 'cheer', 'love', 'more'])));
   await g(wait(200));
 }
 async function finale(id, n, items, g) {
@@ -738,13 +820,17 @@ function roundTap(n, g, opts = {}) {
       items.forEach(o => o.addEventListener('pointerdown', async e => {
         e.stopPropagation(); idle.poke();
         if (finished || o.classList.contains('done')) return;
-        count++; markCount(o, count); sfx.pop(count - 1); bigNum(count); robo.pose(count % 3 ? 'wow' : 'cheer', 700);
+        count++; markCount(o, count); sfx.pop(count - 1); bigNum(count); robo.pose(count % 3 ? 'wow' : 'cheer', 700); buddy.hop();
         if (count < n) { say('core:n' + count); return; }
         finished = true; idle.stop();
         try { await g(say('core:n' + count)); await g(wait(250)); await finale(id, n, items, g); await celebrate(g); resolve(); } catch (err) { reject(err); }
       }));
       await g(say(opts.intro || `o_${id}:intro`));
-      if (!finished && count === 0) await g(say('core:tapeach'));
+      if (!finished && count === 0) {
+        if (buddy.id && !buddy.met.has(buddy.id)) { buddy.met.add(buddy.id); buddy.hop(); await g(buddy.line('hi')); }
+        else if (Math.random() < .4) { buddy.hop(); await g(buddy.line(pick(['tap', 'more', 'love']))); }
+      }
+      if (!finished && count === 0) await g(say(pick(['core:tapeach', 'core:nm_tap', 'core:nm_count'])));
     } catch (err) { reject(err); }
   });
 }
@@ -790,14 +876,15 @@ function roundHowMany(n, g) {
             sfx.boing(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); robo.pose('oops', 2600);
             await g(say('core:n' + v)); await g(say('core:oops'));
             b.classList.add('fade'); robo.pose('point', 1500);
-            await g(say('core:countagain'));
+            buddy.hop(); await g(buddy.line('go'));
+            await g(say(pick(['core:countagain', 'core:nm_count'])));
             await g(countAloud(items, g));
             ans.querySelector(`.ans[data-v="${n}"]`).classList.add('right');
             locked = false;
           }
         } catch (err) { reject(err); }
       }));
-      await g(say(`o_${id}:q`)); await g(say('core:howmany')); locked = false;
+      await g(say(`o_${id}:q`)); await g(say(pick(['core:howmany', 'core:nm_howmany']))); locked = false;
     } catch (err) { reject(err); }
   });
 }
@@ -836,7 +923,7 @@ function roundFeed(n, g) {
           try {
             await g(say('core:n' + count)); robo.setBase('base'); robo.pose('love', 2500);
             sign.remove(); play.prepend(nameTag(id, n));
-            await g(say(`o_${id}:c${n}`)); await g(say('core:enough'));
+            await g(say(`o_${id}:c${n}`)); await g(say(pick(['core:enough', 'core:nm_yum'])));
             await celebrate(g); resolve();
           } catch (err) { reject(err); }
         };
@@ -889,27 +976,138 @@ function showPostcard(a, isNew, g) {
   });
 }
 
-// Robo flies to the place on an aeroplane, wearing their clothes
-async function flight(a, g) {
-  const F = $('#flight'); let clouds = '';
-  for (let i = 0; i < 10; i++) clouds += `<div class="cl" style="--h:${ri(40, 110)};--s:${rnd(1.6, 3.2).toFixed(2)}s;--d:${(-rnd(0, 3)).toFixed(2)}s;--t:${ri(2, 90)}%"></div>`;
-  F.innerHTML = `${clouds}<div class="plane"><div class="bob"><img class="pimg" src="img/obj/aeroplane.webp" alt="">${figHTML('cheer')}</div></div>
+// Robo (and the friend) travel to the place: by plane, car, train, ship, camel, elephant...
+async function journey(a, g) {
+  const v = (DATA.travel && DATA.travel[a.id]) || { o: 'aeroplane', kind: 'air', flip: true };
+  const F = $('#flight'); F.className = v.kind;
+  let deco = '';
+  if (v.kind === 'air') {
+    for (let i = 0; i < 10; i++) deco += `<div class="cl" style="--h:${ri(40, 110)};--s:${rnd(1.6, 3.2).toFixed(2)}s;--d:${(-rnd(0, 3)).toFixed(2)}s;--t:${ri(2, 90)}%"></div>`;
+  } else {
+    for (let i = 0; i < 4; i++) deco += `<div class="cl" style="--h:${ri(30, 70)};--s:${rnd(7, 11).toFixed(2)}s;--d:${(-rnd(0, 8)).toFixed(2)}s;--t:${ri(3, 30)}%"></div>`;
+    deco += '<div class="hills h1"></div><div class="hills h2"></div>';
+    if (v.kind === 'sea') deco += '<div class="waves w1"></div><div class="waves w2"></div>';
+    else {
+      deco += v.kind === 'animal' ? '<div class="grass"></div>' : '<div class="road"></div>';
+      const props = v.kind === 'animal' ? ['tree', 'flower', 'tree', 'rabbit'] : ['tree', 'house', 'tree', 'flower'];
+      props.forEach((p, i) => deco += `<img class="prop" src="img/obj/${p}.webp" alt="" style="--h:${ri(14, 26)}vmin;--s:${rnd(2.6, 3.6).toFixed(2)}s;--d:${(-i * .9).toFixed(2)}s">`);
+    }
+  }
+  const sit = { air: '58%', land: '52%', animal: '74%', sea: '50%' }[v.kind], fz = (v.kind === 'land' || v.kind === 'sea') ? 0 : 2;
+  F.innerHTML = `${deco}<div class="veh ${v.kind}" style="--sit:${sit};--fz:${fz}"><div class="bob">${figHTML('cheer')}${buddy.id ? `<img class="bud" src="img/friend/${buddy.id}.webp" alt="">` : ''}<img class="pimg${v.flip ? ' flip' : ''}" src="img/obj/${v.o}.webp" alt=""></div></div>
     <div class="dest">${PIN}<span>${placeName(a)}</span></div>`;
-  F.hidden = false; sfx.engine(); sfx.whoosh();
-  const t = setInterval(() => sfx.whoosh(), 1500);
-  try { await g(Promise.all([say('trip:go_' + a.id), wait(5000)])); }
-  finally { clearInterval(t); F.hidden = true; F.innerHTML = ''; }
+  F.hidden = false;
+  const fx = {
+    air: () => sfx.whoosh(), land: () => sfx.engine(), sea: () => sfx.bubbles(),
+    animal: () => { for (let i = 0; i < 4; i++) sfx.tone(i % 2 ? 380 : 300, .06, 'triangle', .25, null, i * .18); },
+  }[v.kind];
+  if (v.o === 'train') { sfx.tone(660, .5, 'triangle', .2); sfx.tone(880, .6, 'triangle', .18, null, .5); }
+  if (v.o === 'bicycle') { sfx.tone(1800, .25, 'sine', .15); sfx.tone(1800, .25, 'sine', .15, null, .3); }
+  if (v.o === 'ship') sfx.tone(110, 1.2, 'triangle', .25);
+  fx();
+  const t = setInterval(fx, v.kind === 'animal' ? 800 : 1500);
+  const puffs = setInterval(() => {
+    const el = F.querySelector('.veh'); if (!el || v.kind === 'air') return;
+    const r = el.getBoundingClientRect();
+    burst(r.left + r.width * .1, r.bottom - 10, 3, { colors: v.kind === 'sea' ? ['#ffffff', '#d6f1ff'] : ['#e9e2d4', '#ffffff'], shapes: ['circle'], angle: Math.PI, speed: 3, g: -.02, size: 14 });
+  }, 260);
+  try {
+    await g(say('trip:go_' + a.id));
+    if (buddy.id) { await g(buddy.line('trip')); }
+    await g(wait(1200));
+  } finally { clearInterval(t); clearInterval(puffs); F.hidden = true; F.innerHTML = ''; F.className = ''; }
 }
+
+/* ===== living scenes: gentle effects that drift over every picture, and things that fly past ===== */
+const MOODS = {
+  farm: ['leaves', ['bird', 'butterfly', 'bee']], pond: ['petals', ['butterfly', 'bird', 'bee']], garden: ['petals', ['butterfly', 'bee', 'ladybug', 'bird']],
+  park: ['leaves', ['bird', 'balloon', 'butterfly']], jungle: ['leaves', ['parrot', 'butterfly']], savanna: ['motes', ['bird']],
+  forest: ['leaves', ['bird', 'owl']], ocean: ['bubbles', ['fish', 'octopus', 'whale']], beach: ['sparkle', ['bird', 'balloon']],
+  sea: ['sparkle', ['bird', 'aeroplane']], snow: ['snow', ['bird']], nightforest: ['fireflies', ['owl']], sky: ['sparkle', ['aeroplane', 'balloon', 'bird', 'helicopter']],
+  rainbow: ['sparkle', ['unicorn', 'balloon', 'butterfly']], nightsky: ['stars', ['rocket', 'owl']], space: ['stars', ['rocket', 'star']],
+  kitchen: ['motes', ['butterfly']], living: ['motes', ['balloon']], bedroom: ['motes', ['balloon', 'butterfly']], study: ['motes', ['butterfly']],
+  road: ['leaves', ['bird', 'aeroplane']], railway: ['leaves', ['bird', 'balloon']], town: ['leaves', ['balloon', 'bird', 'aeroplane']],
+  playground: ['petals', ['balloon', 'butterfly', 'bird']], rain: ['rain', ['umbrella', 'bird']], trip: ['sparkle', ['bird', 'balloon', 'butterfly', 'aeroplane']],
+};
+const amb = $('#amb'), ax = amb.getContext('2d');
+let ambKind = null, ambParts = [], ambRaf = 0, flyList = [];
+function setMood(key) {
+  const m = MOODS[key] || MOODS.trip;
+  if (ambKind !== m[0]) { ambKind = m[0]; ambParts = []; }
+  flyList = m[1].filter(id => DATA && DATA.objects[id]);
+  if (!ambRaf) ambRaf = requestAnimationFrame(ambTick);
+}
+const AMB_COLORS = { leaves: ['#7cc96b', '#a6d65a', '#f2b24a', '#e8834a'], petals: ['#ffb3d1', '#ff8cc6', '#ffd1e6', '#ffffff'], snow: ['#ffffff'], rain: ['#cfe8ff'],
+  bubbles: ['#ffffff'], stars: ['#fff6b0', '#ffffff'], fireflies: ['#fff27a', '#d6ff7a'], motes: ['#fff2c2', '#ffe08a'], sparkle: ['#ffffff', '#fff2a8', '#ffd1f0'] };
+function ambSpawn(W, H, anywhere) {
+  const k = ambKind, c = pick(AMB_COLORS[k] || ['#fff']);
+  const p = { k, c, x: rnd(0, W), y: anywhere ? rnd(0, H) : -20, r: rnd(3, 7), vx: 0, vy: 0, rot: rnd(0, 6), vr: rnd(-.03, .03), ph: rnd(0, 6), life: 1 };
+  if (k === 'leaves' || k === 'petals') { p.vy = rnd(.5, 1.2); p.vx = rnd(-.3, .3); p.r = rnd(6, 11); }
+  else if (k === 'snow') { p.vy = rnd(.6, 1.6); p.r = rnd(2, 5.5); }
+  else if (k === 'rain') { p.vy = rnd(9, 13); p.vx = -1.5; p.r = rnd(12, 20); }
+  else if (k === 'bubbles') { p.y = anywhere ? rnd(0, H) : H + 20; p.vy = -rnd(.5, 1.3); p.r = rnd(4, 14); }
+  else if (k === 'stars') { p.y = rnd(0, H * .7); p.r = rnd(1.5, 4); }
+  else if (k === 'fireflies' || k === 'motes') { p.y = rnd(H * .2, H); p.vx = rnd(-.3, .3); p.vy = rnd(-.3, .1); p.r = k === 'motes' ? rnd(1.5, 3.5) : rnd(2.5, 4.5); }
+  else if (k === 'sparkle') { p.y = rnd(0, H); p.r = rnd(3, 8); p.life = rnd(.3, 1); }
+  return p;
+}
+function ambTick(t) {
+  const W = innerWidth, H = innerHeight, D = Math.min(2, devicePixelRatio || 1);
+  if (amb.width !== W * D) { amb.width = W * D; amb.height = H * D; }
+  ax.setTransform(D, 0, 0, D, 0, 0); ax.clearRect(0, 0, W, H);
+  const want = { rain: 70, snow: 60, leaves: 18, petals: 22, bubbles: 24, stars: 50, fireflies: 22, motes: 26, sparkle: 20 }[ambKind] || 0;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches ? .3 : 1;
+  while (ambParts.length < want * reduce) ambParts.push(ambSpawn(W, H, ambParts.length < want * .8 && !ambParts.started));
+  ambParts.started = true;
+  const ts = t / 1000;
+  ambParts = ambParts.filter(p => p.y < H + 30 && p.y > -40 && p.x > -40 && p.x < W + 40 && p.life > 0);
+  for (const p of ambParts) {
+    p.ph += .02; p.rot += p.vr;
+    if (p.k === 'leaves' || p.k === 'petals') p.x += p.vx + Math.sin(p.ph) * .8;
+    else if (p.k === 'snow') p.x += Math.sin(p.ph) * .5;
+    else if (p.k === 'bubbles') p.x += Math.sin(p.ph * 1.5) * .5;
+    else if (p.k === 'fireflies' || p.k === 'motes') { p.vx += rnd(-.03, .03); p.vy += rnd(-.03, .03); p.vx *= .98; p.vy *= .98; p.x += p.vx; }
+    if (p.k !== 'fireflies' && p.k !== 'motes') p.x += p.vx;
+    p.y += p.vy;
+    if (p.k === 'sparkle') p.life -= .006;
+    ax.save(); ax.translate(p.x, p.y);
+    if (p.k === 'leaves' || p.k === 'petals') { ax.rotate(p.rot + Math.sin(p.ph) * .6); ax.fillStyle = p.c; ax.globalAlpha = .85; ax.beginPath(); ax.ellipse(0, 0, p.r, p.r * .5, 0, 0, 7); ax.fill(); }
+    else if (p.k === 'snow') { ax.fillStyle = '#fff'; ax.globalAlpha = .9; ax.beginPath(); ax.arc(0, 0, p.r, 0, 7); ax.fill(); }
+    else if (p.k === 'rain') { ax.strokeStyle = 'rgba(220,240,255,.7)'; ax.lineWidth = 2; ax.beginPath(); ax.moveTo(0, 0); ax.lineTo(-2, p.r); ax.stroke(); }
+    else if (p.k === 'bubbles') { ax.strokeStyle = 'rgba(255,255,255,.75)'; ax.lineWidth = 2; ax.beginPath(); ax.arc(0, 0, p.r, 0, 7); ax.stroke(); ax.fillStyle = 'rgba(255,255,255,.6)'; ax.beginPath(); ax.arc(-p.r * .35, -p.r * .35, p.r * .25, 0, 7); ax.fill(); }
+    else if (p.k === 'stars' || p.k === 'sparkle') { const a = p.k === 'stars' ? .35 + .65 * Math.abs(Math.sin(ts * 1.5 + p.ph * 20)) : Math.sin(p.life * Math.PI); ax.globalAlpha = a; ax.fillStyle = p.c; ax.rotate(p.rot); ax.beginPath(); for (let i = 0; i < 8; i++) { const r = i % 2 ? p.r * .25 : p.r; const an = i * Math.PI / 4; ax.lineTo(Math.cos(an) * r, Math.sin(an) * r); } ax.fill(); }
+    else { const a = .4 + .6 * Math.abs(Math.sin(ts * 2 + p.ph * 10)); const gr = ax.createRadialGradient(0, 0, 0, 0, 0, p.r * 4); gr.addColorStop(0, p.c); gr.addColorStop(1, 'rgba(255,255,200,0)'); ax.globalAlpha = a * (p.k === 'motes' ? .6 : 1); ax.fillStyle = gr; ax.beginPath(); ax.arc(0, 0, p.r * 4, 0, 7); ax.fill(); }
+    ax.restore();
+  }
+  ambRaf = requestAnimationFrame(ambTick);
+}
+// things fly or swim past now and then; tap one and Robo says its name
+async function flyby(id) {
+  const im = await loadImg(objSrc(id)); if (!im) return;
+  const el = document.createElement('img'); el.className = 'flyby'; el.src = im.src; el.alt = DATA.objects[id].s;
+  document.getElementById('app').appendChild(el);
+  const W = innerWidth, H = innerHeight, y0 = rnd(.14, .42) * H, dir = Math.random() < .5 ? 1 : -1, waves = rnd(2, 4), amp = rnd(20, 50);
+  const kf = []; for (let i = 0; i <= 12; i++) { const t = i / 12; kf.push({ transform: `translate(${dir > 0 ? -160 + t * (W + 320) : W + 160 - t * (W + 320)}px,${y0 + Math.sin(t * Math.PI * waves) * amp}px) rotate(${Math.cos(t * Math.PI * waves) * 8}deg)` }); }
+  const a = el.animate(kf, { duration: rnd(8000, 12000), easing: 'linear' });
+  el.animate([{ scale: '1 1' }, { scale: '1 .86' }], { duration: rnd(250, 400), iterations: Infinity, direction: 'alternate' });
+  a.finished.then(() => el.remove()).catch(() => el.remove());
+  el.addEventListener('pointerdown', e => {
+    e.stopPropagation(); burst(e.clientX, e.clientY, 22, { shapes: ['star', 'heart'] }); sfx.sparkle();
+    el.animate([{ rotate: '0deg' }, { rotate: '360deg' }], { duration: 700, composite: 'add' });
+    loadSprite('o_' + id).then(() => { if (!voice) say('o_' + id + ':name'); });
+  });
+}
+setInterval(() => { if (!$('#stage').hidden && flyList.length && !document.hidden && $('#postcard').hidden && Math.random() < .7) flyby(pick(flyList)); }, 8000);
 
 // After the postcard, play inside the place: count the things that live there
 async function adventureGift(a, isNew, g) {
   const place = a.cat === 'place';
   await g(Promise.all([loadSprite('trip'), loadSprite('adv')]));
-  if (place && DATA.flights.includes(a.id)) { robo.pose('cheer', 2000); await g(say('core:trip')); await g(flight(a, g)); }
+  if (place && DATA.flights.includes(a.id)) { robo.pose('cheer', 2000); await g(say('core:trip')); await g(journey(a, g)); }
   await g(showPostcard(a, isNew, g));
   const obj = DATA.advCount[a.id];
   if (obj && DATA.objects[obj]) {
-    await setBgSrc('img/adv/' + a.id + '.webp');
+    setMood('trip'); await setBgSrc('img/adv/' + a.id + '.webp');
     $('#stage').classList.add('scene');
     try { await g(roundTap(pickN(), g, { obj, intro: 'trip:cnt_' + a.id, keepBg: true })); }
     finally { $('#stage').classList.remove('scene'); }
@@ -928,6 +1126,7 @@ async function wearGift(it, g) {
   W.innerHTML = `<div class="rays"></div><img src="img/wear/${it.id}.webp" alt="${it.cap}"><div class="ribbon2">${it.cap}</div>`;
   W.hidden = false; sfx.sparkle(); confetti(); robo.pose('wow', 3000);
   await g(say('core:wearnew'));
+  buddy.hop(); await g(buddy.line('look'));
   await g(say('wear:' + it.id));
   // the new thing flies onto Robo
   const im = W.querySelector('img'), from = im.getBoundingClientRect(), fr = $('#roboFig').getBoundingClientRect();
@@ -959,7 +1158,7 @@ async function maybeGift(g) {
   await g(say('core:present'));
   await g(new Promise(res => {
     const btn = P.querySelector('button'); let n = 0;
-    const t = setTimeout(go, 10000), nag = setInterval(() => { if (n++ < 2 && !voice) say('core:tapgift'); }, 4000);
+    const t = setTimeout(go, 10000), nag = setInterval(() => { if (n++ < 2 && !voice) say(n === 1 ? 'core:nm_gift' : 'core:tapgift'); }, 4000);
     function go() { clearTimeout(t); clearInterval(nag); btn.removeEventListener('click', go); res(); }
     btn.addEventListener('click', go);
   }));
@@ -978,13 +1177,14 @@ const MODES = ['tap', 'tap', 'tap', 'howmany', 'tap', 'tap', 'feed', 'tap', 'tap
 async function gameLoop() {
   const id = ++runId, g = guard(id);
   try {
-    drawGifts(); updateChip(); dressRobo();
+    drawGifts(); updateChip(); dressRobo(); if (DATA.friends.length) buddy.set(DATA.friends[Math.floor(S.round / 3) % DATA.friends.length]);
     if (!(S.trip && S.trip.left > 0)) setBg(pick(['park', 'garden', 'rainbow', 'playground'])); else roundBg();
     robo.pose('wave', 3500);
     await g(say(S.round > 0 ? 'core:welcome' : 'core:hello'));
-    await g(say('core:letsgo'));
+    await g(say('core:nm_ready'));
     while (true) {
       const mode = MODES[S.round % MODES.length], n = pickN();
+      if (DATA.friends.length) buddy.set(DATA.friends[Math.floor(S.round / 3) % DATA.friends.length]);
       if (mode === 'tap') await g(roundTap(n, g));
       else if (mode === 'howmany') await g(roundHowMany(n, g));
       else await g(roundFeed(n, g));
