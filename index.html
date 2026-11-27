@@ -182,7 +182,10 @@ img{-webkit-user-drag:none;user-select:none}
 @keyframes bhop{40%{transform:translateY(-30%) scale(1.06,.94)}70%{transform:scale(1.08,.9)}}
 #buddy.spin img{animation:bspin 1.1s ease-in-out}
 @keyframes bspin{30%{transform:translateY(-35%) rotate(-20deg)}70%{transform:translateY(-35%) rotate(360deg)}100%{transform:rotate(360deg)}}
-#buddy.talk img{animation:btalk .22s ease-in-out infinite alternate}
+#buddy.fwiggle img{animation:rwiggle .8s 2}
+#buddy.fdance img{animation:rdance .5s ease-in-out 5}
+#buddy.fsleep img{animation:rsleep 2.4s ease-in-out}
+#buddy.fbeat img{animation:rheart 1s ease-in-out 2}
 @keyframes btalk{to{transform:scale(1.06,.95) rotate(-2deg)}}
 
 /* living scenes: drifting effects and things flying past */
@@ -632,7 +635,7 @@ function dressRobo(popId) {
 }
 function dressCast() {
   const f = DATA.friends, c = $('#cast');
-  c.innerHTML = (f[0] ? `<img class="f" src="img/friend/${f[0]}.webp" alt="Pip">` : '') + figHTML('wave') + (f[1] ? `<img class="f" src="img/friend/${f[1]}.webp" alt="Luna">` : '');
+  c.innerHTML = (f[0] ? `<img class="f" src="${fsrc(f[0], 'wave')}" alt="Pip">` : '') + figHTML('wave') + (f[1] ? `<img class="f" src="${fsrc(f[1], 'cheer')}" alt="Luna">` : '');
 }
 (function blink() { setTimeout(() => { if (!robo.talk && !robo.temp && robo.base === 'base') { robo.pose('blink', 150); } blink(); }, rnd(2500, 5000)); })();
 
@@ -659,14 +662,23 @@ R.addEventListener('pointerdown', e => { e.stopPropagation(); react(); });
 
 /* friends: one plays beside Robo (the buddy), the others pop up to cheer */
 const BU = $('#buddy'), BI = $('#buddyImg');
+// friend pictures: a pose frame when one exists, else the single picture
+const fsrc = (id, pose) => (DATA && DATA.friendPoses && (DATA.friendPoses[id] || []).includes(pose)) ? `img/friend/${id}/${pose}.webp` : `img/friend/${id}.webp`;
 const buddy = {
-  id: null, met: new Set(),
+  id: null, met: new Set(), temp: null, talk: false, flip: false, tt: 0,
+  render() {
+    if (!this.id) return;
+    const p = this.temp || (this.talk ? (this.flip ? 'talk' : 'idle') : 'idle');
+    const s2 = fsrc(this.id, p); if (BI.getAttribute('src') !== s2) BI.setAttribute('src', s2);
+  },
+  pose(p, ms = 1500) { this.temp = p; this.render(); clearTimeout(this.tt); this.tt = setTimeout(() => { this.temp = null; this.render(); }, ms); },
   set(id) {
-    if (!id || id === this.id) return; this.id = id; BI.src = 'img/friend/' + id + '.webp'; BI.alt = id; BU.className = id; loadSprite('f_' + id);
+    if (!id || id === this.id) return; this.id = id; this.temp = null; BI.alt = id; BU.className = id; this.render(); loadSprite('f_' + id);
+    (DATA.friendPoses[id] || []).forEach(p => loadImg(`img/friend/${id}/${p}.webp`));
     if (!BU.hidden) { const [x, y] = this.homeSpot(); this.place(innerWidth + 120, y); this.jumpTo(x, y, 900); }
   },
   anim(c, ms = 700) { BU.classList.remove(c); void BU.offsetWidth; BU.classList.add(c); setTimeout(() => BU.classList.remove(c), ms); },
-  talking(on) { BU.classList.toggle('talk', on); },
+  talking(on) { this.talk = on; this.render(); },
   hop() { this.anim('hop', 500); },
   x: -200, y: 0, cur: null,
   w() { return BU.getBoundingClientRect().width || 100; },
@@ -683,8 +695,8 @@ const buddy = {
     if (this.cur) { try { this.cur.cancel(); } catch (e) {} }
     const a = this.cur = BU.animate(kf, { duration: ms, easing: 'ease-in-out' });
     BU.style.transform = kf[kf.length - 1].transform.replace(/ rotate\([^)]*\)/, '');
-    sfx.tone(320, .2, 'sine', .18, 760);
-    a.finished.then(() => { if (this.cur === a) this.cur = null; this.anim('land', 350); sfx.tone(180, .08, 'triangle', .15); burst(x, y, 8, { colors: ['#ffffff', '#ffd23f', '#86fbff'], speed: 4, size: 8 }); }).catch(() => {});
+    sfx.tone(320, .2, 'sine', .18, 760); this.pose('jump', ms);
+    a.finished.then(() => { if (this.cur === a) this.cur = null; this.anim('land', 350); this.pose(pick(['wow', 'cheer', 'laugh']), 700); sfx.tone(180, .08, 'triangle', .15); burst(x, y, 8, { colors: ['#ffffff', '#ffd23f', '#86fbff'], speed: 4, size: 8 }); }).catch(() => {});
     return wait(ms);
   },
   onObj(o) { const r = o.getBoundingClientRect(); return this.jumpTo(r.left + r.width / 2, r.top + r.height * .25); },
@@ -695,15 +707,28 @@ const buddy = {
   home() { const [x, y] = this.homeSpot(); return this.jumpTo(x, y); },
   show() {
     if (!this.id || !BU.hidden) return;
-    BU.hidden = false; const [x, y] = this.homeSpot(); this.place(innerWidth + 120, y); this.jumpTo(x, y, 900);
+    BU.hidden = false; this.render(); const [x, y] = this.homeSpot(); this.place(innerWidth + 120, y); this.jumpTo(x, y, 900);
   },
   hide() { BU.hidden = true; },
   async line(k) { if (!this.id) return; await loadSprite('f_' + this.id); return say(`f_${this.id}:${k}`); },
 };
+// tap the friend: a different reaction each time, like Robo
+const FRIEND_REACT = [['laugh', 'giggle', 'fwiggle'], ['silly', 'silly', 'hop'], ['dizzy', 'dizzy', 'spin'], ['love', 'iloveyou', 'fbeat'],
+  ['sleepy', 'sleepy', 'fsleep'], ['wow', 'amazed', 'hop'], ['dance', 'dance', 'fdance'], ['cheer', 'wheee', 'spin']];
+let fDeck = [];
 BU.addEventListener('pointerdown', e => {
-  e.stopPropagation(); buddy.anim('spin', 1100); const c = center(BI); burst(c.x, c.y - 30, 16, { shapes: ['star', 'heart'] }); sfx.beep();
-  if (!voice) buddy.line(pick(['giggle', 'giggle', 'love', 'cheer']));
+  e.stopPropagation(); const c = center(BI);
+  if (voice) { buddy.pose('laugh', 700); buddy.anim('hop', 500); sfx.beep(); return; }
+  if (!fDeck.length) fDeck = shuffle(FRIEND_REACT);
+  const [pose, line, anim] = fDeck.pop();
+  buddy.pose(pose, 2600); buddy.anim(anim, 2400);
+  if (pose === 'love') burst(c.x, c.y - 30, 14, { shapes: ['heart'], colors: ['#ff5fa8', '#ff8cc6'], up: 4, g: -.02, speed: 4, size: 16, slow: true });
+  else if (pose === 'sleepy') burst(c.x + 20, c.y - 40, 1, { shapes: ['text'], text: 'Z', colors: ['#a678ff'], up: 2, g: -.03, speed: 1, size: 16, slow: true });
+  else burst(c.x, c.y - 30, 16, { shapes: ['star', 'heart'] });
+  sfx.beep(); buddy.line(line);
 });
+setInterval(() => { if (buddy.talk) { buddy.flip = !buddy.flip; buddy.render(); } }, 160);
+(function fblink() { setTimeout(() => { if (!buddy.talk && !buddy.temp && !BU.hidden) buddy.pose('blink', 160); fblink(); }, rnd(2200, 4800)); })();
 addEventListener('resize', () => { if (!BU.hidden) { const [x, y] = buddy.homeSpot(); buddy.place(x, y); } });
 let friendSide = 0;
 function friendCheer() {
@@ -713,7 +738,9 @@ function friendCheer() {
   const rr = RI.getBoundingClientRect(), fw = Math.min(190, Math.max(110, innerWidth * .18));
   const lo = Math.min(innerWidth - fw - 10, rr.right + 10), hi = Math.max(lo, innerWidth - fw * 1.9);
   el.style.left = rnd(lo, hi) + 'px'; el.style.right = 'auto'; el.style.rotate = rnd(-10, 10) + 'deg';
-  el.src = 'img/friend/' + pick(others.length ? others : DATA.friends) + '.webp';
+  const who = pick(others.length ? others : DATA.friends), seq = ['wave', 'cheer', 'dance', 'cheer', 'laugh', 'dance'];
+  el.src = fsrc(who, 'jump'); let k = 0;
+  clearInterval(el._t); el._t = setInterval(() => { el.src = fsrc(who, seq[k++ % seq.length]); if (k > 7) clearInterval(el._t); }, 330);
   el.classList.remove('up'); void el.offsetWidth; el.classList.add('up');
   setTimeout(() => { const c = center(el); burst(c.x, c.y - 30, 14, { shapes: ['star', 'heart'] }); sfx.sparkle(); }, 500);
 }
@@ -833,9 +860,9 @@ function drawGifts() {
 }
 async function celebrate(g) {
   sfx.tada(); confetti(); robo.pose('cheer', 2200); robo.anim('dance', 2600); friendCheer();
-  buddy.anim('spin', 1100);
+  buddy.anim('fdance', 2400); buddy.pose('dance', 2600);
   await g(say(pick(['core:praise1', 'core:praise2', 'core:praise3', 'core:praise4', 'core:praise5', 'core:praise6', 'core:praise7', 'core:praise8', 'core:nm_good', 'core:nm_star', 'core:nm_wow', 'core:nm_love'])));
-  buddy.hop(); await g(buddy.line(pick(['yay', 'wow', 'clap', 'cheer', 'love', 'more'])));
+  buddy.hop(); buddy.pose('cheer', 2500); await g(buddy.line(pick(['yay', 'wow', 'clap', 'cheer', 'love', 'more'])));
   await g(wait(200));
 }
 async function finale(id, n, items, g) {
@@ -867,7 +894,7 @@ function roundTap(n, g, opts = {}) {
       }));
       await g(say(opts.intro || `o_${id}:intro`));
       if (!finished && count === 0) {
-        if (buddy.id && !buddy.met.has(buddy.id)) { buddy.met.add(buddy.id); buddy.hop(); await g(buddy.line('hi')); }
+        if (buddy.id && !buddy.met.has(buddy.id)) { buddy.met.add(buddy.id); buddy.hop(); buddy.pose('wave', 3200); await g(buddy.line('hi')); }
         else if (Math.random() < .4) { buddy.hop(); await g(buddy.line(pick(['tap', 'more', 'love']))); }
       }
       if (!finished && count === 0) await g(say(pick(['core:tapeach', 'core:nm_tap', 'core:nm_count'])));
@@ -916,7 +943,7 @@ function roundHowMany(n, g) {
             sfx.boing(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); robo.pose('oops', 2600);
             await g(say('core:n' + v)); await g(say('core:oops'));
             b.classList.add('fade'); robo.pose('point', 1500);
-            buddy.hop(); await g(buddy.line('go'));
+            buddy.hop(); buddy.pose('cheer', 2200); await g(buddy.line('go'));
             await g(say(pick(['core:countagain', 'core:nm_count'])));
             await g(countAloud(items, g));
             ans.querySelector(`.ans[data-v="${n}"]`).classList.add('right');
@@ -1034,7 +1061,7 @@ async function journey(a, g) {
     }
   }
   const sit = { air: '58%', land: '52%', animal: '74%', sea: '50%' }[v.kind], fz = (v.kind === 'land' || v.kind === 'sea') ? 0 : 2;
-  F.innerHTML = `${deco}<div class="veh ${v.kind}" style="--sit:${sit};--fz:${fz}"><div class="bob">${figHTML('cheer')}${buddy.id ? `<img class="bud" src="img/friend/${buddy.id}.webp" alt="">` : ''}<img class="pimg${v.flip ? ' flip' : ''}" src="img/obj/${v.o}.webp" alt=""></div></div>
+  F.innerHTML = `${deco}<div class="veh ${v.kind}" style="--sit:${sit};--fz:${fz}"><div class="bob">${figHTML('cheer')}${buddy.id ? `<img class="bud" src="${fsrc(buddy.id, 'cheer')}" alt="">` : ''}<img class="pimg${v.flip ? ' flip' : ''}" src="img/obj/${v.o}.webp" alt=""></div></div>
     <div class="dest">${PIN}<span>${a.cap}</span></div>`;
   F.hidden = false;
   const fx = {
@@ -1166,7 +1193,7 @@ async function wearGift(it, g) {
   W.innerHTML = `<div class="rays"></div><img src="img/wear/${it.id}.webp" alt="${it.cap}"><div class="ribbon2">${it.cap}</div>`;
   W.hidden = false; sfx.sparkle(); confetti(); robo.pose('wow', 3000);
   await g(say('core:wearnew'));
-  buddy.hop(); await g(buddy.line('look'));
+  buddy.hop(); buddy.pose('wow', 2400); await g(buddy.line('look'));
   await g(say('wear:' + it.id));
   // the new thing flies onto Robo
   const im = W.querySelector('img'), from = im.getBoundingClientRect(), fr = $('#roboFig').getBoundingClientRect();
