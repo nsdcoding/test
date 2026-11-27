@@ -192,6 +192,80 @@ img{-webkit-user-drag:none;user-select:none}
 #amb{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5}
 .flyby{position:fixed;left:0;top:0;width:clamp(64px,10vmin,120px);z-index:12;cursor:pointer;filter:drop-shadow(0 8px 6px rgba(53,36,110,.25))}
 
+/* number balloons */
+.balloons{position:relative;width:100%;height:100%;min-height:300px}
+.nb{position:absolute;bottom:0;width:clamp(96px,17vmin,170px);aspect-ratio:.78;cursor:pointer;left:var(--x);
+  animation:nbRise 1.6s cubic-bezier(.2,.8,.3,1) backwards,nbSway var(--sw) ease-in-out infinite 1.6s;animation-delay:var(--d),calc(var(--d) + 1.6s)}
+.nb .ball{position:absolute;inset:0 0 18% 0;border-radius:50% 50% 48% 48%/55% 55% 45% 45%;background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.75) 0 9%,transparent 10%),radial-gradient(circle at 40% 35%,var(--c2),var(--c) 70%);
+  box-shadow:inset -8px -10px 0 rgba(0,0,0,.12),0 10px 18px rgba(53,36,110,.25);display:grid;place-items:center}
+.nb .ball::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:12px;transform:translateX(-50%);background:var(--c);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.nb .str{position:absolute;left:50%;bottom:0;width:2px;height:18%;background:rgba(255,255,255,.9)}
+.nb span{font-size:clamp(48px,10vmin,96px);font-weight:700;color:#fff;-webkit-text-stroke:3px rgba(53,36,110,.25);paint-order:stroke fill;text-shadow:0 3px 0 rgba(0,0,0,.15)}
+.nb.shake .ball{animation:shake .5s}
+.nb.glow .ball{box-shadow:0 0 0 6px #fff,0 0 30px 10px var(--c2)}
+.nb.popped{animation:nbPop .35s ease-out forwards!important;pointer-events:none}
+.nb.away{animation:nbAway 2.2s ease-in forwards!important;pointer-events:none}
+@keyframes nbRise{from{transform:translateY(110vh)}}
+@keyframes nbSway{0%,100%{transform:translate(0,var(--y0)) rotate(-4deg)}50%{transform:translate(0,calc(var(--y0) - 18px)) rotate(4deg)}}
+@keyframes nbPop{to{transform:translateY(var(--y0)) scale(1.6);opacity:0}}
+@keyframes nbAway{to{transform:translateY(-120vh) rotate(10deg)}}
+
+/* shapes */
+.shapes{display:flex;flex-wrap:wrap;gap:clamp(14px,4vmin,40px);justify-content:center;align-items:center}
+.shp{width:clamp(110px,20vmin,190px);aspect-ratio:1;cursor:pointer;animation:popIn .6s cubic-bezier(.3,1.7,.5,1) backwards;animation-delay:var(--d)}
+.shp svg{width:100%;height:100%;overflow:visible;filter:drop-shadow(0 8px 8px rgba(53,36,110,.25));animation:bob 2.4s ease-in-out infinite;animation-delay:var(--bd)}
+.shp.shake svg{animation:shake .5s}
+.shp.win svg{animation:winSpin 1.2s cubic-bezier(.3,1.4,.5,1)}
+.shp.fade{opacity:.25;pointer-events:none;transition:opacity .4s}
+@keyframes winSpin{40%{transform:scale(1.35) rotate(-15deg)}70%{transform:scale(1.3) rotate(360deg)}100%{transform:scale(1.2) rotate(360deg)}}
+
+/* tracing */
+.traceCard{position:relative;background:rgba(255,255,255,.92);border-radius:32px;box-shadow:0 10px 0 rgba(53,36,110,.18);padding:12px;touch-action:none}
+.traceCard canvas{display:block;width:min(62vmin,430px);height:min(62vmin * 1.15,494px);touch-action:none;cursor:crosshair}
+.traceStars{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;max-width:min(62vmin,430px)}
+.traceStars img{width:clamp(28px,5vmin,44px)}
+
+/* Robo's house and dress-up room */
+.room{position:absolute;inset:0;z-index:44;overflow:hidden;background:#f6e9ff}
+.room > .rbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.room .rtop{position:absolute;z-index:3;top:calc(env(safe-area-inset-top,0px) + 12px);left:max(12px,env(safe-area-inset-left,0px));right:max(12px,env(safe-area-inset-right,0px));display:flex;gap:10px;align-items:center}
+.room .rtitle{flex:1;text-align:center;font-weight:700;font-size:clamp(22px,4.4vmin,40px);color:#fff;text-shadow:0 3px 0 var(--grape),0 0 12px rgba(53,36,110,.4)}
+.shelves{position:absolute;z-index:2;left:4%;right:4%;top:calc(env(safe-area-inset-top,0px) + 78px);bottom:40%;overflow-y:auto;display:flex;flex-direction:column;gap:clamp(18px,3vmin,30px);padding:6px 4px}
+.shelf{position:relative;display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:clamp(6px,1.5vmin,14px);padding:0 14px 10px;min-height:clamp(70px,12vmin,110px)}
+.shelf::after{content:"";position:absolute;left:0;right:0;bottom:0;height:14px;border-radius:6px;background:linear-gradient(#c98b52,#a86a35);box-shadow:0 8px 10px rgba(80,40,10,.25)}
+.sv{position:relative;z-index:1;width:clamp(58px,10vmin,96px);aspect-ratio:1;cursor:pointer;animation:popIn .5s cubic-bezier(.3,1.7,.5,1) backwards;animation-delay:var(--d)}
+.sv img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;filter:drop-shadow(0 4px 3px rgba(53,36,110,.3))}
+.sv.locked{display:grid;place-items:center;opacity:.35;cursor:default}
+.sv.locked svg{width:60%}
+.sv.jig img{animation:hint .6s ease-in-out 2}
+.room .rcast{position:absolute;z-index:2;left:4%;bottom:calc(env(safe-area-inset-bottom,0px) + 2%);height:40%;display:flex;align-items:flex-end;gap:1vmin}
+.room .rcast .fig{cursor:pointer}
+.room .rcast .f{height:46%;object-fit:contain;filter:drop-shadow(0 8px 8px rgba(53,36,110,.3))}
+.room .bigbtn{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;font-weight:700;font-size:clamp(18px,3.4vmin,28px);padding:10px 22px;border-radius:999px;border:4px solid #fff;box-shadow:0 6px 0 rgba(53,36,110,.25)}
+.room .bigbtn svg{width:1.4em;height:1.4em}
+.room .rgo{position:absolute;z-index:3;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(env(safe-area-inset-bottom,0px) + 16px)}
+#dress .dfig{position:absolute;z-index:2;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 25%);height:52%;transform:translateX(-50%);cursor:pointer}
+#dress .dfig .fig{animation:float 3s ease-in-out infinite}
+#dress .dfig.spin .fig{animation:rspin 1.2s ease-in-out}
+#dress .dfriend{position:absolute;z-index:2;right:8%;bottom:calc(env(safe-area-inset-bottom,0px) + 25%);height:22%;filter:drop-shadow(0 8px 8px rgba(53,36,110,.3))}
+#dress .tray{position:absolute;z-index:3;left:0;right:0;bottom:0;padding:10px max(12px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 10px) max(12px,env(safe-area-inset-left,0px));background:rgba(255,255,255,.88);border-radius:28px 28px 0 0;box-shadow:0 -6px 20px rgba(53,36,110,.15)}
+#dress .slots{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+#dress .slotb{padding:6px 16px;border-radius:999px;background:#f1eaff;font-weight:700;font-size:clamp(15px,2.6vmin,22px)}
+#dress .slotb.on{background:var(--grape);color:#fff}
+#dress .items{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 8px;justify-content:safe center}
+#dress .it{flex:none;width:clamp(72px,12vmin,110px);aspect-ratio:1;border-radius:20px;background:#fff;border:4px solid #fff;box-shadow:0 4px 0 rgba(53,36,110,.15);display:grid;place-items:center;padding:8px}
+#dress .it img{width:100%;height:100%;object-fit:contain}
+#dress .it.on{border-color:var(--mint);box-shadow:0 0 0 4px var(--mint)}
+#dress .it.none svg{width:60%}
+#dress .it.locked{opacity:.4}
+#dress .it.locked svg{width:70%}
+
+/* start screen extra buttons */
+.startMore{display:flex;gap:clamp(10px,3vmin,26px);justify-content:center;flex-wrap:wrap}
+.smb{display:flex;flex-direction:column;align-items:center;gap:4px;color:#fff;font-weight:700;font-size:clamp(13px,2.2vmin,17px);text-shadow:0 2px 0 rgba(53,36,110,.5)}
+.smb i{width:clamp(58px,9.5vmin,80px);aspect-ratio:1;border-radius:50%;border:5px solid #fff;display:grid;place-items:center;box-shadow:0 6px 0 rgba(53,36,110,.25);font-style:normal}
+.smb svg{width:52%;height:52%}
+
 /* trip location chip */
 #chip{display:flex;align-items:center;gap:6px;background:var(--pink);color:#fff;font-weight:700;font-size:clamp(15px,2.4vmin,22px);padding:8px 16px 8px 10px;border-radius:999px;border:3px solid #fff;box-shadow:0 4px 0 rgba(53,36,110,.18);animation:popIn .5s cubic-bezier(.3,1.7,.5,1);white-space:nowrap;max-width:40vw;overflow:hidden;text-overflow:ellipsis}
 #chip svg{width:1.3em;height:1.3em;flex:none}
@@ -318,26 +392,25 @@ img{-webkit-user-drag:none;user-select:none}
 .tile.locked svg{width:34%;height:auto;opacity:.45}
 
 /* start screen */
-#start{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6vmin;text-align:center;
+#start{position:absolute;inset:0;z-index:50;display:flex;flex-direction:column;align-items:center;justify-content:safe center;overflow-y:auto;gap:1.2vmin;text-align:center;
   padding:calc(env(safe-area-inset-top,0px) + 16px) max(16px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 16px) max(16px,env(safe-area-inset-left,0px))}
 #title{margin:0;line-height:1;text-wrap:balance}
 #title .line{display:block}
-#title .l1{font-size:clamp(32px,7vmin,76px);color:#fff;text-shadow:0 5px 0 var(--grape)}
-#title .l2{font-size:clamp(44px,10.5vmin,120px);margin-top:.5vmin}
+#title .l1{font-size:clamp(28px,6vmin,64px);color:#fff;text-shadow:0 5px 0 var(--grape)}
+#title .l2{font-size:clamp(40px,9vmin,104px);margin-top:.5vmin}
 #title .ch{display:inline-block;color:var(--c);-webkit-text-stroke:clamp(5px,1vmin,9px) #fff;paint-order:stroke fill;text-shadow:0 7px 0 rgba(53,36,110,.25);
   animation:letter 1.6s ease-in-out infinite,popIn .6s cubic-bezier(.3,1.8,.5,1) backwards;animation-delay:var(--d),var(--d)}
 @keyframes letter{50%{transform:translateY(-14%) rotate(-4deg)}}
-#cast{display:flex;align-items:flex-end;justify-content:center;gap:1vmin;height:min(36vh,320px)}
+#cast{display:flex;align-items:flex-end;justify-content:center;gap:1vmin;height:min(27vh,250px);flex:none}
 #cast .f{height:46%;object-fit:contain;filter:drop-shadow(0 12px 10px rgba(53,36,110,.3));animation:hover 2.4s ease-in-out infinite;animation-delay:-.8s}
 #cast .f:last-child{animation-delay:-1.6s}
 #cast .fig{filter:drop-shadow(0 12px 10px rgba(53,36,110,.3));animation:hover 2.4s ease-in-out infinite}
 @keyframes hover{50%{transform:translateY(-14px) rotate(2deg)}}
 .startBtns{display:flex;align-items:center;gap:clamp(16px,4vmin,40px)}
-#playBtn{width:clamp(110px,20vmin,170px);aspect-ratio:1;border-radius:50%;background:var(--pink);border:7px solid #fff;display:grid;place-items:center;animation:beacon 1.6s ease-out infinite}
+#playBtn{width:clamp(100px,17vmin,150px);flex:none;aspect-ratio:1;border-radius:50%;background:var(--pink);border:7px solid #fff;display:grid;place-items:center;animation:beacon 1.6s ease-out infinite}
 #playBtn svg{width:46%;height:46%;margin-left:8%}
 #playBtn:active{transform:translateY(6px)}
-#albumBtn2{width:clamp(76px,13vmin,110px);aspect-ratio:1;border-radius:50%;background:var(--sun);border:6px solid #fff;display:grid;place-items:center;box-shadow:0 8px 0 #d9a400}
-#albumBtn2 svg{width:52%;height:52%}
+
 @keyframes beacon{0%{box-shadow:0 10px 0 #c23b80,0 0 0 0 rgba(255,255,255,.8)}100%{box-shadow:0 10px 0 #c23b80,0 0 0 34px rgba(255,255,255,0)}}
 #loadMsg{font-size:clamp(20px,3.6vmin,30px);font-weight:600;color:#fff;text-shadow:0 3px 0 var(--grape);min-height:1.3em}
 #start.leave{animation:leave .6s ease-in forwards}
@@ -392,6 +465,8 @@ img{-webkit-user-drag:none;user-select:none}
   <div id="flight" hidden></div>
   <div id="postcard" hidden></div>
   <div id="album" hidden></div>
+  <div id="house" class="room" hidden></div>
+  <div id="dress" class="room" hidden></div>
 
   <div id="start">
     <h1 id="title"><span class="line l1">Nusaybah's</span><span class="line l2" id="t2"></span></h1>
@@ -400,12 +475,15 @@ img{-webkit-user-drag:none;user-select:none}
       <button id="playBtn" aria-label="Play">
         <svg viewBox="0 0 24 24"><path d="M5 3.5v17a1 1 0 0 0 1.5.86l14-8.5a1 1 0 0 0 0-1.72l-14-8.5A1 1 0 0 0 5 3.5z" fill="#fff"/></svg>
       </button>
-      <button id="albumBtn2" aria-label="Robo's adventures">
-        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="#fff" stroke="#35246e" stroke-width="2"/><circle cx="9" cy="10" r="2" fill="#ff5fa8"/><path d="M4 18l5-5 3 3 3-4 5 6" fill="none" stroke="#35246e" stroke-width="2" stroke-linejoin="round"/></svg>
-      </button>
+    </div>
+    <div class="startMore">
+      <button class="smb" id="songBtn" aria-label="Songs"><i style="background:#a678ff"><svg viewBox="0 0 24 24"><path d="M9 18V5l11-2v13" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" fill="#fff"/><circle cx="17" cy="16" r="3" fill="#fff"/></svg></i>Songs</button>
+      <button class="smb" id="houseBtn" aria-label="Robo's house"><i style="background:#ff9b3d"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z" fill="#fff"/></svg></i>Robo's house</button>
+      <button class="smb" id="dressBtn" aria-label="Dress up Robo"><i style="background:#ff5fa8"><svg viewBox="0 0 24 24"><path d="M9 3h6l1 3 4 3-2 3-2-1v10H8V11l-2 1-2-3 4-3z" fill="#fff"/></svg></i>Dress up</button>
+      <button class="smb" id="albumBtn2" aria-label="Robo's adventures"><i style="background:#ffd23f"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3" fill="#fff"/><circle cx="9" cy="10" r="2" fill="#ff5fa8"/><path d="M4 18l5-5 3 3 3-4 5 6" fill="none" stroke="#35246e" stroke-width="2" stroke-linejoin="round"/></svg></i>Album</button>
     </div>
     <div id="loadMsg">Tap to play!</div>
-    <div class="parent">Turn the sound on. The yellow button shows Robo's adventures.</div>
+    <div class="parent">Turn the sound on.</div>
   </div>
 
   <canvas id="fx"></canvas>
@@ -1179,6 +1257,7 @@ async function adventureGift(a, isNew, g) {
     try { await g(roundTap(pickN(), g, { obj, intro: 'trip:cnt_' + a.id, keepBg: true })); }
     finally { $('#stage').classList.remove('scene'); }
   }
+  if (place) await souvenirGift(a.id, g);
   if (place && DATA.trips.includes(a.id)) { S.trip = { id: a.id, left: 3 }; save(); updateChip(); }
 }
 
@@ -1240,7 +1319,7 @@ async function maybeGift(g) {
   robo.pose('love', 2000);
 }
 
-const MODES = ['tap', 'tap', 'tap', 'howmany', 'tap', 'tap', 'feed', 'tap', 'tap', 'howmany', 'tap', 'feed'];
+const MODES = ['tap', 'tap', 'find', 'tap', 'color', 'howmany', 'tap', 'shape', 'tap', 'trace', 'feed', 'tap', 'song', 'find', 'tap', 'color', 'howmany', 'tap', 'shape', 'trace', 'tap', 'feed'];
 async function gameLoop() {
   const id = ++runId, g = guard(id);
   try {
@@ -1255,6 +1334,11 @@ async function gameLoop() {
       if (DATA.friends.length) buddy.set(DATA.friends[Math.floor(S.round / 3) % DATA.friends.length]);
       if (mode === 'tap') await g(roundTap(n, g));
       else if (mode === 'howmany') await g(roundHowMany(n, g));
+      else if (mode === 'find') await g(roundFind(n, g));
+      else if (mode === 'color') await g(roundColor(g));
+      else if (mode === 'shape') await g(roundShape(g));
+      else if (mode === 'trace') await g(roundTrace(n, g));
+      else if (mode === 'song') await playSong(nextSong(), g);
       else await g(roundFeed(n, g));
       S.round++; S.progress++;
       if (S.trip && S.trip.left > 0) { S.trip.left--; if (!S.trip.left) { S.trip = null; updateChip(); } }
@@ -1296,6 +1380,368 @@ function openAlbum(tab = 'trips') {
   }));
 }
 
+/* =================================================================
+   Learning activities: find the number, colors, shapes, tracing, songs
+   ================================================================= */
+const HEX = { red: '#ff4d6d', orange: '#ff9b3d', yellow: '#ffd23f', green: '#3cc96b', blue: '#4fb8ff', purple: '#a678ff', pink: '#ff7fc8' };
+const LIGHT = { red: '#ff9aab', orange: '#ffc88f', yellow: '#fff0a0', green: '#9eeab4', blue: '#a9dcff', purple: '#d3bbff', pink: '#ffc1e3' };
+const seenIntro = new Set();
+async function introOnce(key, g) { if (seenIntro.has(key)) return; seenIntro.add(key); await g(say('learn:' + key)); }
+const cName = c => c;
+
+/* --- Find the number: pop the right number balloon --- */
+function roundFind(n, g) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await g(loadSprite('learn')); clearPlay(); robo.setBase('base');
+      roundBg(pick(['sky', 'rainbow', 'park', 'playground']));
+      const opts = new Set([n]);
+      for (const v of shuffle([n - 1, n + 1, n + 2, n - 2, n + 3].filter(v => v >= 1 && v <= 10))) { if (opts.size >= (S.round > 12 ? 4 : 3)) break; opts.add(v); }
+      const nums = shuffle([...opts]), cols = shuffle(Object.keys(HEX));
+      const box = document.createElement('div'); box.className = 'balloons'; play.appendChild(box);
+      const H = box.getBoundingClientRect().height || 400;
+      const bs = nums.map((v, i) => {
+        const b = document.createElement('button'); b.className = 'nb'; b.dataset.v = v; b.setAttribute('aria-label', WORDS[v - 1]);
+        const c = cols[i % cols.length];
+        b.style.cssText = `--x:${8 + i * (84 / nums.length) + rnd(-3, 3)}%;--c:${HEX[c]};--c2:${LIGHT[c]};--d:${i * .25}s;--sw:${rnd(2.2, 3.2).toFixed(2)}s;--y0:${-rnd(H * .18, H * .42).toFixed(0)}px`;
+        b.dataset.c = c;
+        b.innerHTML = `<div class="ball"><span>${v}</span></div><div class="str"></div>`;
+        box.appendChild(b); return b;
+      });
+      sfx.whoosh();
+      let locked = true, misses = 0;
+      const right = bs.find(b => +b.dataset.v === n);
+      bs.forEach(b => b.addEventListener('click', async e => {
+        e.stopPropagation(); if (locked) return; locked = true;
+        const v = +b.dataset.v;
+        try {
+          if (v === n) {
+            const c = center(b); b.classList.add('popped'); sfx.pop(9); sfx.noise(.15, 3000, 800, .4);
+            burst(c.x, c.y, 40, { colors: [HEX[b.dataset.c], LIGHT[b.dataset.c], '#fff'], speed: 12 }); bigNum(n); robo.pose('cheer', 1800);
+            bs.forEach(x => { if (x !== b) x.classList.add('away'); });
+            buddy.jumpTo(c.x, c.y + 60);
+            await g(say('core:n' + n)); await celebrate(g); buddy.home(); resolve();
+          } else {
+            misses++; sfx.boing(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); robo.pose('oops', 2000);
+            await g(say('learn:thatis' + v));
+            if (misses >= 2) { right.classList.add('glow'); buddy.onObj(right); }
+            await g(say('learn:find' + n)); locked = false;
+          }
+        } catch (err) { reject(err); }
+      }));
+      await g(wait(1200));
+      await introOnce('find_intro', g);
+      robo.pose('point', 1500); await g(say('learn:find' + n)); locked = false;
+      setTimeout(() => { if (!locked && right.isConnected) right.classList.add('glow'); }, 9000);
+    } catch (err) { reject(err); }
+  });
+}
+
+/* --- Colors: tap all the things of one color (and count them) --- */
+const BASE_HUE = { balloon: 355, car: 355, star: 48 };
+const HUE = { red: 355, orange: 25, yellow: 50, green: 125, blue: 205, purple: 272, pink: 325 };
+function tint(obj, c) {
+  let d = HUE[c] - BASE_HUE[obj]; while (d > 180) d -= 360; while (d < -180) d += 360;
+  const br = c === 'yellow' ? 1.18 : c === 'pink' ? 1.12 : 1, sat = c === 'pink' ? .8 : 1.15;
+  return `hue-rotate(${d}deg) saturate(${sat}) brightness(${br})`;
+}
+function roundColor(g) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await g(loadSprite('learn'));
+      const obj = pick(['balloon', 'car', 'star']); await g(prep(obj, g));
+      clearPlay(); robo.setBase('base');
+      const target = pick(Object.keys(HEX)), others = shuffle(Object.keys(HEX).filter(c => c !== target)).slice(0, 2);
+      const t = Math.min(ri(2, 3 + Math.floor(S.round / 10)), 5);
+      const colors = shuffle([...Array(t).fill(target), ...others.flatMap(c => Array(ri(1, 2)).fill(c))]);
+      const { f, items } = spawnField(colors.length, obj); play.appendChild(f);
+      items.forEach((o, i) => { o.dataset.c = colors[i]; const im = o.querySelector('img'); im.style.filter = tint(obj, colors[i]) + ' drop-shadow(0 6px 5px rgba(53,36,110,.28))'; });
+      enterAll(items, DATA.objects[obj].exit);
+      let count = 0, finished = false;
+      const targets = items.filter(o => o.dataset.c === target);
+      items.forEach(o => o.addEventListener('pointerdown', async e => {
+        e.stopPropagation(); if (finished || o.classList.contains('done')) return;
+        if (o.dataset.c !== target) {
+          sfx.boing(); o.classList.remove('hint'); void o.offsetWidth; o.classList.add('hint'); robo.pose('oops', 1500);
+          try { await g(say('learn:col_' + o.dataset.c)); await g(say('learn:coltap_' + target)); } catch (err) { reject(err); }
+          return;
+        }
+        count++; markCount(o, count); sfx.pop(count - 1); bigNum(count); robo.pose('wow', 700); buddy.onObj(o);
+        if (count < t) { say('core:n' + count); return; }
+        finished = true;
+        try {
+          await g(say('core:n' + count)); await g(say('learn:coldone_' + target));
+          robo.pose('wave', 3000); await g(buddy.home());
+          await g(exitAll(items, DATA.objects[obj].exit)); await celebrate(g); resolve();
+        } catch (err) { reject(err); }
+      }));
+      await introOnce('col_intro', g);
+      robo.pose('point', 1500); await g(say('learn:coltap_' + target));
+    } catch (err) { reject(err); }
+  });
+}
+
+/* --- Shapes --- */
+const SHAPE_LIST = ['circle', 'square', 'triangle', 'star', 'heart', 'rectangle', 'oval', 'diamond'];
+function starPts(cx0, cy0, R, r) { let p = []; for (let i = 0; i < 10; i++) { const a = i * Math.PI / 5 - Math.PI / 2, rr = i % 2 ? r : R; p.push((cx0 + Math.cos(a) * rr).toFixed(1) + ',' + (cy0 + Math.sin(a) * rr).toFixed(1)); } return p.join(' '); }
+let shapeUid = 0;
+function shapeSVG(s, c) {
+  const P = { circle: '<circle cx="50" cy="50" r="44"/>', square: '<rect x="8" y="8" width="84" height="84" rx="10"/>',
+    triangle: '<path d="M50 6 L95 90 L5 90 Z"/>', star: `<polygon points="${starPts(50, 54, 48, 21)}"/>`,
+    heart: '<path d="M50 92 C8 62 2 34 22 20 C36 10 48 18 50 30 C52 18 64 10 78 20 C98 34 92 62 50 92Z"/>',
+    rectangle: '<rect x="2" y="24" width="96" height="54" rx="8"/>', oval: '<ellipse cx="50" cy="50" rx="33" ry="46"/>',
+    diamond: '<path d="M50 3 L93 50 L50 97 L7 50 Z"/>' }[s];
+  const fy = { triangle: 66, heart: 48, star: 58 }[s] || 50, id = 'sg' + (shapeUid++);
+  return `<svg viewBox="0 0 100 100" aria-hidden="true"><defs><radialGradient id="${id}" cx="35%" cy="30%" r="80%"><stop offset="0" stop-color="${LIGHT[c]}"/><stop offset="1" stop-color="${HEX[c]}"/></radialGradient></defs>
+    <g fill="url(#${id})" stroke="rgba(53,36,110,.55)" stroke-width="3" stroke-linejoin="round">${P}</g>
+    <circle cx="${50 - 9}" cy="${fy}" r="4" fill="#35246e"/><circle cx="${50 + 9}" cy="${fy}" r="4" fill="#35246e"/><circle cx="${50 - 8}" cy="${fy - 1.4}" r="1.3" fill="#fff"/><circle cx="${50 + 10}" cy="${fy - 1.4}" r="1.3" fill="#fff"/>
+    <path d="M${44} ${fy + 7} Q50 ${fy + 13} ${56} ${fy + 7}" stroke="#35246e" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+    <circle cx="${50 - 16}" cy="${fy + 7}" r="3.6" fill="#ff7fb6" opacity=".7"/><circle cx="${50 + 16}" cy="${fy + 7}" r="3.6" fill="#ff7fb6" opacity=".7"/></svg>`;
+}
+function roundShape(g) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      await g(loadSprite('learn')); clearPlay(); robo.setBase('base');
+      roundBg(pick(['playground', 'rainbow', 'bedroom', 'study']));
+      const k = S.round > 14 ? 4 : 3, set = shuffle(SHAPE_LIST).slice(0, k), target = pick(set), cols = shuffle(Object.keys(HEX));
+      const wrap = document.createElement('div'); wrap.className = 'shapes'; play.appendChild(wrap);
+      const els = set.map((s, i) => {
+        const b = document.createElement('button'); b.className = 'shp'; b.dataset.s = s; b.setAttribute('aria-label', s);
+        b.style.setProperty('--d', (i * .15) + 's'); b.style.setProperty('--bd', (-Math.random() * 2) + 's');
+        b.innerHTML = shapeSVG(s, cols[i]); wrap.appendChild(b); return b;
+      });
+      sfx.sparkle();
+      let locked = true;
+      els.forEach(b => b.addEventListener('click', async e => {
+        e.stopPropagation(); if (locked) return; locked = true;
+        const s = b.dataset.s;
+        try {
+          if (s === target) {
+            b.classList.add('win'); const c = center(b); burst(c.x, c.y, 36, { speed: 11 }); sfx.ding(); robo.pose('cheer', 2000); buddy.onObj(b);
+            els.forEach(x => { if (x !== b) x.classList.add('fade'); });
+            await g(say('learn:sh_' + s)); await g(say('learn:shinfo_' + s)); await celebrate(g); buddy.home(); resolve();
+          } else {
+            sfx.boing(); b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); robo.pose('oops', 1800);
+            await g(say('learn:sh_' + s)); await g(say('learn:shfind_' + target)); locked = false;
+          }
+        } catch (err) { reject(err); }
+      }));
+      await introOnce('sh_intro', g);
+      robo.pose('point', 1500); await g(say('learn:shfind_' + target)); locked = false;
+    } catch (err) { reject(err); }
+  });
+}
+
+/* --- Trace the number --- */
+const DIGITS = {
+  1: [[34, 34], [50, 15], [50, 125]],
+  2: [[22, 42], [30, 22], [50, 14], [70, 22], [78, 42], [70, 62], [22, 125], [82, 125]],
+  3: [[24, 30], [40, 16], [62, 15], [76, 30], [72, 52], [52, 66], [74, 78], [80, 100], [68, 119], [46, 126], [24, 114]],
+  4: [[64, 125], [64, 15], [18, 90], [86, 90]],
+  5: [[76, 15], [32, 15], [27, 62], [48, 54], [68, 60], [80, 84], [74, 110], [52, 125], [26, 116]],
+  6: [[72, 22], [52, 14], [32, 28], [22, 62], [24, 100], [40, 122], [62, 124], [78, 104], [74, 80], [56, 68], [34, 74], [24, 94]],
+  7: [[20, 15], [80, 15], [42, 125]],
+  8: [[68, 28], [50, 14], [32, 26], [32, 46], [50, 62], [70, 78], [74, 104], [52, 126], [28, 110], [30, 84], [50, 62], [68, 46], [68, 28]],
+  9: [[74, 42], [62, 20], [44, 16], [28, 30], [28, 52], [44, 64], [64, 58], [74, 42], [74, 84], [66, 112], [44, 126], [28, 118]],
+};
+function resample(pts, step) {
+  const out = [pts[0]];
+  for (let i = 1; i < pts.length; i++) {
+    const [x0, y0] = pts[i - 1], [x1, y1] = pts[i], d = Math.hypot(x1 - x0, y1 - y0), k = Math.max(1, Math.round(d / step));
+    for (let j = 1; j <= k; j++) out.push([x0 + (x1 - x0) * j / k, y0 + (y1 - y0) * j / k]);
+  }
+  return out;
+}
+function roundTrace(n, g) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      n = Math.max(1, Math.min(9, n));
+      await g(loadSprite('learn')); clearPlay(); robo.setBase('base');
+      roundBg(pick(['study', 'bedroom', 'rainbow', 'garden']));
+      const card = document.createElement('div'); card.className = 'traceCard';
+      const cv2 = document.createElement('canvas'); card.appendChild(cv2); play.appendChild(card);
+      const stars = document.createElement('div'); stars.className = 'traceStars';
+      stars.innerHTML = Array.from({ length: n }, () => `<img src="${objSrc('star')}" alt="">`).join(''); play.appendChild(stars);
+      const D = Math.min(2, devicePixelRatio || 1), r = cv2.getBoundingClientRect();
+      cv2.width = r.width * D; cv2.height = r.height * D; const c = cv2.getContext('2d');
+      const sx = r.width / 100 * .8, ox = r.width * .1, sy = r.height / 140 * .86, oy = r.height * .07;
+      const pts = resample(DIGITS[n], 3).map(([x, y]) => [ox + x * sx, oy + y * sy]);
+      const lw = Math.max(26, r.width * .11), tol = r.width * .14;
+      let idx = 0, done = false, last = Date.now(), demoT = null; const myRun = runId;
+      const col = HEX[pick(Object.keys(HEX))];
+      function draw(demoAt) {
+        c.setTransform(D, 0, 0, D, 0, 0); c.clearRect(0, 0, r.width, r.height); c.lineCap = 'round'; c.lineJoin = 'round';
+        c.strokeStyle = '#ece4ff'; c.lineWidth = lw; c.beginPath(); pts.forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke();
+        c.fillStyle = '#c7b5ff'; for (let i = 0; i < pts.length; i += 5) { c.beginPath(); c.arc(pts[i][0], pts[i][1], lw * .09, 0, 7); c.fill(); }
+        if (idx > 0) { c.strokeStyle = col; c.lineWidth = lw * .86; c.beginPath(); pts.slice(0, idx + 1).forEach(([x, y], i) => i ? c.lineTo(x, y) : c.moveTo(x, y)); c.stroke();
+          c.strokeStyle = 'rgba(255,255,255,.45)'; c.lineWidth = lw * .22; c.stroke(); }
+        if (!done) {
+          const [hx, hy] = pts[Math.min(idx, pts.length - 1)];
+          const pulse = 1 + .15 * Math.sin(Date.now() / 180);
+          c.fillStyle = '#3cc96b'; c.beginPath(); c.arc(hx, hy, lw * .55 * pulse, 0, 7); c.fill();
+          c.fillStyle = '#fff'; c.beginPath(); c.arc(hx, hy, lw * .2, 0, 7); c.fill();
+          if (demoAt != null) { const [dx, dy] = pts[demoAt]; c.fillStyle = 'rgba(255,95,168,.85)'; c.beginPath(); c.arc(dx, dy, lw * .4, 0, 7); c.fill(); }
+        }
+      }
+      let raf2 = 0; const loop = () => { if (runId !== myRun) done = true; draw(demoT); if (!done) raf2 = requestAnimationFrame(loop); }; loop();
+      const demo = () => { let i = 0; const t = setInterval(() => { demoT = i; i += 2; if (i >= pts.length || done || idx > 4) { clearInterval(t); demoT = null; } }, 30); };
+      const finish = async () => {
+        done = true; cancelAnimationFrame(raf2); draw(); const cc = center(card);
+        burst(cc.x, cc.y, 70, { speed: 15, size: 16 }); sfx.tada(); bigNum(n); robo.pose('cheer', 2500);
+        try { await g(say('core:n' + n)); await g(say('learn:trd' + n)); await celebrate(g); resolve(); } catch (err) { reject(err); }
+      };
+      const move = e => {
+        if (done) return; const b = cv2.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top;
+        let best = -1; for (let i = idx; i < Math.min(pts.length, idx + 14); i++) if (Math.hypot(pts[i][0] - x, pts[i][1] - y) < tol) best = i;
+        if (best > idx) {
+          idx = best; last = Date.now();
+          if (Math.random() < .5) burst(e.clientX, e.clientY, 3, { shapes: ['star'], speed: 3, size: 9 });
+          sfx.tone(300 + idx / pts.length * 900, .06, 'sine', .08);
+          if (idx >= pts.length - 2) finish();
+        }
+      };
+      cv2.addEventListener('pointerdown', e => { e.stopPropagation(); cv2.setPointerCapture?.(e.pointerId); move(e); });
+      cv2.addEventListener('pointermove', e => { if (e.buttons || e.pointerType === 'touch') move(e); });
+      const nag = setInterval(() => { if (runId !== myRun) done = true; if (done) return clearInterval(nag); if (Date.now() - last > 7000) { last = Date.now(); demo(); if (idx > 0 && !voice) say('learn:tr_go'); } }, 1000);
+      await introOnce('tr_intro', g);
+      robo.pose('point', 1500); await g(say('learn:tr' + n)); demo();
+    } catch (err) { reject(err); }
+  });
+}
+
+/* --- Counting songs: chanted to a beat, things appear and leave with the words --- */
+const SONG_SPEC = {
+  buckle: { obj: 'shoe', scene: 'bedroom', counts: [2, 4, 6, 8, 10] },
+  ducks: { obj: 'duck', scene: 'pond', counts: [5, 5, 5, 4, 4, 3, 3, 2, 2, 1, 1, 0, 0, 5] },
+  stars: { obj: 'star', scene: 'nightsky', counts: [3, 6, 9, 10, 8, 5, 2, 1] },
+};
+let beatTimer = null;
+function startBeat() {
+  if (!ctx || beatTimer) return; let k = 0;
+  if (musicGain) musicGain.gain.setTargetAtTime(0, ctx.currentTime, .2);
+  beatTimer = setInterval(() => {
+    if (k % 4 === 0) sfx.tone(130, .25, 'sine', .45, 45);
+    if (k % 4 === 2) sfx.noise(.12, 1800, 900, .22);
+    sfx.noise(.03, 8000, 6000, .05);
+    if (k % 8 === 0) sfx.tone(pick([262, 330, 392]), .3, 'triangle', .06);
+    k++;
+  }, 300);
+}
+function stopBeat() { clearInterval(beatTimer); beatTimer = null; if (musicGain && musicOn) musicGain.gain.setTargetAtTime(.045, ctx.currentTime, .4); }
+async function playSong(id, g) {
+  const spec = SONG_SPEC[id]; if (!spec || !VOICE['song_' + id]) return;
+  await g(Promise.all([loadSprite('song_' + id), loadSprite('learn'), loadImg(objSrc(spec.obj))]));
+  clearPlay(); robo.setBase('base'); setMood(spec.scene); setBgSrc(DATA.scenes.includes('stage') && Math.random() < .4 ? 'img/bg/stage.webp' : 'img/bg/' + spec.scene + '.webp');
+  const f = document.createElement('div'); f.className = 'field'; play.appendChild(f);
+  const items = [];
+  const setCount = async c => {
+    while (items.length < c) {
+      const o = document.createElement('div'); o.className = 'obj'; o.style.setProperty('--size', sizeFor(10)); o.style.setProperty('--bd', (-Math.random() * 2) + 's');
+      o.innerHTML = `<div class="bob"><img src="${objSrc(spec.obj)}" alt="${DATA.objects[spec.obj].s}"></div>`;
+      f.appendChild(o); items.push(o); enterAll([o], DATA.objects[spec.obj].exit);
+    }
+    const gone = items.splice(c); if (gone.length) exitAll(gone, DATA.objects[spec.obj].exit).then(() => gone.forEach(o => o.remove()));
+    items.forEach((o, i) => markCount(o, i + 1));
+    if (c) bigNum(c);
+  };
+  robo.pose('cheer', 2000); await g(say('learn:song_time'));
+  startBeat();
+  try {
+    for (let i = 0; i < spec.counts.length; i++) {
+      setCount(spec.counts[i]); robo.anim('dance', 2400); robo.pose(pick(['dance', 'cheer', 'wave']), 1800);
+      buddy.pose(pick(['dance', 'cheer', 'jump']), 1800); buddy.hop();
+      if (i % 3 === 2) friendCheer();
+      await g(say(`song_${id}:l${i}`)); await g(wait(180));
+    }
+  } finally { stopBeat(); }
+  await g(say('learn:song_end')); await celebrate(g);
+  await exitAll(items.splice(0), DATA.objects[spec.obj].exit);
+}
+function nextSong() { const ids = Object.keys(SONG_SPEC).filter(k => VOICE['song_' + k]); const id = ids[(S.songNext || 0) % ids.length]; S.songNext = (S.songNext || 0) + 1; save(); return id; }
+
+/* --- Souvenir arriving after a trip --- */
+async function souvenirGift(id, g) {
+  if (!DATA.souvenirs || !DATA.souvenirs.includes(id)) return;
+  await g(Promise.all([loadSprite('house'), loadSprite('learn')]));
+  const W2 = $('#wearShow');
+  W2.innerHTML = `<div class="rays"></div><img src="img/sv/${id}.webp" alt=""><div class="ribbon2">For Robo's house</div>`;
+  W2.hidden = false; sfx.sparkle(); robo.pose('wow', 3000);
+  await g(say('learn:sv_new')); await g(say('house:' + id));
+  const im = W2.querySelector('img');
+  await g(im.animate([{ transform: 'none', opacity: 1 }, { transform: 'translateY(-40vh) scale(.2)', opacity: 0 }], { duration: 800, easing: 'ease-in', fill: 'forwards' }).finished);
+  W2.hidden = true; W2.innerHTML = '';
+}
+
+/* =================================================================
+   Robo's house: souvenirs from every trip on the shelves
+   ================================================================= */
+async function openHouse() {
+  if (!DATA) return; initAudio();
+  const H = $('#house'), all = DATA.souvenirs || [], got = new Set(S.got), have = all.filter(id => got.has(id));
+  const perRow = innerWidth < 640 ? 5 : innerWidth < 1000 ? 8 : 10;
+  const tiles = all.map((id, i) => got.has(id)
+    ? `<button class="sv" data-id="${id}" style="--d:${(i * .04).toFixed(2)}s" aria-label="${id}"><img src="img/sv/${id}.webp" alt=""></button>`
+    : `<div class="sv locked"><svg viewBox="0 0 200 200">${giftSVG().replace(/<\/?svg[^>]*>/g, '')}</svg></div>`);
+  const ordered = [...tiles.filter(t => t.includes('data-id')), ...tiles.filter(t => !t.includes('data-id'))];
+  let rows = ''; for (let i = 0; i < ordered.length; i += perRow) rows += `<div class="shelf">${ordered.slice(i, i + perRow).join('')}</div>`;
+  const f = DATA.friends;
+  H.innerHTML = `<img class="rbg" src="img/bg/house.webp" alt="">
+    <div class="rtop"><button class="round" id="hClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="#35246e" stroke-width="3" stroke-linecap="round"/></svg></button>
+      <div class="rtitle">Robo's House · ${have.length} of ${all.length}</div></div>
+    <div class="shelves">${rows}</div>
+    <div class="rcast">${figHTML('wave')}${f.map(x => `<img class="f" src="${fsrc(x, pick(['wave', 'cheer', 'idle']))}" alt="">`).join('')}</div>
+    <button class="bigbtn rgo" id="hDress"><svg viewBox="0 0 24 24"><path d="M9 3h6l1 3 4 3-2 3-2-1v10H8V11l-2 1-2-3 4-3z" fill="#fff"/></svg>Dress up</button>`;
+  H.hidden = false;
+  $('#hClose').addEventListener('click', e => { e.stopPropagation(); stopVoice(); H.hidden = true; });
+  $('#hDress').addEventListener('click', e => { e.stopPropagation(); H.hidden = true; openDress(); });
+  H.querySelectorAll('.sv[data-id]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation(); b.classList.remove('jig'); void b.offsetWidth; b.classList.add('jig'); burst(e.clientX, e.clientY, 18, { shapes: ['star', 'heart'] }); sfx.sparkle();
+    loadSprite('house').then(() => say('house:' + b.dataset.id));
+  }));
+  H.querySelector('.rcast .fig').addEventListener('click', e => { e.stopPropagation(); burst(e.clientX, e.clientY, 16); sfx.beep(); if (!voice) say(pick(['core:nm_love', 'core:r_tickle', 'core:r_dance'])); });
+  if (ctx) { await Promise.all([loadSprite('learn'), loadSprite('core')]); await say('learn:house_intro'); if (!H.hidden) say(have.length ? 'learn:house_more' : 'learn:house_empty'); }
+}
+
+/* =================================================================
+   Dress-up room: put on and take off everything Robo has won
+   ================================================================= */
+const SLOT_ICONS = { head: 'Hats', eyes: 'Glasses', neck: 'Neck', dress: 'Dresses', back: 'Wings', feet: 'Shoes' };
+let dressSlot = 'head', dressPose = 'wave';
+function dressFigure(pose) { const d = $('#dress .dfig'); if (d) d.innerHTML = figHTML(pose || dressPose); }
+function renderDressTray() {
+  const T = $('#dress .tray'); if (!T) return;
+  const owned = new Set(S.owned), items = DATA.wardrobe[dressSlot] || [];
+  T.innerHTML = `<div class="slots">${Object.keys(SLOT_ICONS).filter(s => (DATA.wardrobe[s] || []).length).map(s => `<button class="slotb${s === dressSlot ? ' on' : ''}" data-s="${s}">${SLOT_ICONS[s]}</button>`).join('')}</div>
+    <div class="items"><button class="it none${!S.wear[dressSlot] ? ' on' : ''}" aria-label="Take off"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="#a678ff" stroke-width="2.5"/><path d="M7 17 17 7" stroke="#a678ff" stroke-width="2.5"/></svg></button>
+    ${items.map(it => owned.has(it.id) ? `<button class="it${S.wear[dressSlot] === it.id ? ' on' : ''}" data-w="${it.id}" aria-label="${it.cap}"><img src="img/wear/${it.id}.webp" alt=""></button>`
+      : `<div class="it locked"><svg viewBox="0 0 200 200">${giftSVG().replace(/<\/?svg[^>]*>/g, '')}</svg></div>`).join('')}</div>`;
+  T.querySelectorAll('.slotb').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); dressSlot = b.dataset.s; sfx.twinkle(); renderDressTray(); }));
+  T.querySelector('.it.none').addEventListener('click', e => {
+    e.stopPropagation(); if (!S.wear[dressSlot]) return; delete S.wear[dressSlot]; save(); dressRobo(); dressCast();
+    dressFigure('wow'); setTimeout(() => dressFigure(), 1500); sfx.whoosh(); renderDressTray(); say('learn:dress_off');
+  });
+  T.querySelectorAll('.it[data-w]').forEach(b => b.addEventListener('click', e => {
+    e.stopPropagation(); const it = WEAR[b.dataset.w]; S.wear[it.slot] = it.id; save(); dressRobo(); dressCast();
+    const fig = $('#dress .dfig'); dressFigure(pick(['love', 'cheer', 'wow'])); fig.classList.remove('spin'); void fig.offsetWidth; fig.classList.add('spin');
+    setTimeout(() => dressFigure(), 1800); const c = center(fig); burst(c.x, c.y, 30, { shapes: ['star', 'heart'] }); sfx.sparkle(); renderDressTray();
+    loadSprite('wear').then(() => say('wear:' + it.id));
+  }));
+}
+async function openDress() {
+  if (!DATA) return; initAudio();
+  const Dd = $('#dress'), f = DATA.friends;
+  Dd.innerHTML = `<img class="rbg" src="img/bg/dressup.webp" alt="">
+    <div class="rtop"><button class="round" id="dClose" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="#35246e" stroke-width="3" stroke-linecap="round"/></svg></button><div class="rtitle">Dress up Robo</div></div>
+    <div class="dfig" role="button" aria-label="Robo"></div>${f.length ? `<img class="dfriend" src="${fsrc(pick(f), 'cheer')}" alt="">` : ''}<div class="tray"></div>`;
+  Dd.hidden = false; dressFigure(); renderDressTray();
+  $('#dClose').addEventListener('click', e => { e.stopPropagation(); stopVoice(); Dd.hidden = true; });
+  $('#dress .dfig').addEventListener('click', e => {
+    e.stopPropagation(); dressFigure(pick(['dance', 'cheer', 'love', 'silly', 'laugh'])); setTimeout(() => dressFigure(), 1600);
+    burst(e.clientX, e.clientY, 16); sfx.beep(); if (!voice) say('learn:dress_look');
+  });
+  if (ctx) { await Promise.all([loadSprite('learn'), loadSprite('wear')]); await say('learn:dress_intro'); if (!Dd.hidden && S.owned.length) say('learn:dress_pick'); }
+}
+
 /* ================= start / home ================= */
 (function title() {
   let h = ''; [...'Robot Counting!'].forEach((ch, i) => h += ch === ' ' ? ' ' : `<span class="ch" style="--c:${COLORS[i % COLORS.length]};--d:${(i * .07).toFixed(2)}s">${ch}</span>`);
@@ -1330,11 +1776,22 @@ $('#playBtn').addEventListener('click', async e => {
   startMusic(); gameLoop();
 });
 $('#albumBtn2').addEventListener('click', e => { e.stopPropagation(); if (DATA) { initAudio(); openAlbum(); } });
+async function readyAudio() { initAudio(); await Promise.all([loadSprite('core'), loadSprite('learn'), ...DATA.poses.map(p => loadImg('img/robo/' + p + '.webp'))]); }
+$('#houseBtn').addEventListener('click', async e => { e.stopPropagation(); if (!DATA) return; await readyAudio(); openHouse(); });
+$('#dressBtn').addEventListener('click', async e => { e.stopPropagation(); if (!DATA) return; await readyAudio(); openDress(); });
+// songs straight from the start screen: one song, then back to the start
+$('#songBtn').addEventListener('click', async e => {
+  e.stopPropagation(); if (!DATA) return; await readyAudio();
+  $('#start').hidden = true; $('#hud').hidden = false; $('#stage').hidden = false; dressRobo(); startMusic();
+  if (DATA.friends.length) buddy.set(DATA.friends[Math.floor(S.round / 3) % DATA.friends.length]); buddy.show();
+  const id = ++runId, g = guard(id);
+  try { await playSong(nextSong(), g); await g(wait(600)); $('#homeBtn').click(); } catch (err) { if (err !== CANCEL) console.error(err); }
+});
 $('#albumBtn').addEventListener('click', e => { e.stopPropagation(); openAlbum(); });
 $('#homeBtn').addEventListener('click', e => {
   e.stopPropagation(); runId++; stopVoice(); clearPlay(); robo.setBase('base');
   $('#present').hidden = true; $('#postcard').hidden = true; $('#sayInner').classList.remove('show');
-  buddy.hide(); $('#wearShow').hidden = true; $('#flight').hidden = true; $('#flight').innerHTML = ''; $('#stage').classList.remove('scene');
+  buddy.hide(); stopBeat(); $('#house').hidden = true; $('#dress').hidden = true; $('#wearShow').hidden = true; $('#flight').hidden = true; $('#flight').innerHTML = ''; $('#stage').classList.remove('scene');
   $('#hud').hidden = true; $('#stage').hidden = true; $('#start').hidden = false; setBg('rainbow'); dressCast();
 });
 $('#musicBtn').addEventListener('click', e => {
