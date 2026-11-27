@@ -689,10 +689,8 @@ const buddy = {
   },
   onObj(o) { const r = o.getBoundingClientRect(); return this.jumpTo(r.left + r.width / 2, r.top + r.height * .25); },
   homeSpot() {
-    const r = RI.getBoundingClientRect(), w = this.w();
-    let x = r.right + w * .2, y = r.bottom - 4;
-    if (x + w / 2 > innerWidth - 8) x = r.left - w * .2;
-    return [Math.max(w / 2 + 6, Math.min(innerWidth - w / 2 - 6, x)), Math.min(innerHeight - 6, y)];
+    const w = this.w(), pad = Math.max(12, innerWidth * .03);
+    return [innerWidth - w / 2 - pad, innerHeight - 8];
   },
   home() { const [x, y] = this.homeSpot(); return this.jumpTo(x, y); },
   show() {
@@ -712,6 +710,9 @@ function friendCheer() {
   if (!DATA || !DATA.friends.length) return;
   const others = DATA.friends.filter(f => f !== buddy.id);
   const el = friendSide++ % 2 ? $('#friendL') : $('#friendR');
+  const rr = RI.getBoundingClientRect(), fw = Math.min(190, Math.max(110, innerWidth * .18));
+  const lo = Math.min(innerWidth - fw - 10, rr.right + 10), hi = Math.max(lo, innerWidth - fw * 1.9);
+  el.style.left = rnd(lo, hi) + 'px'; el.style.right = 'auto'; el.style.rotate = rnd(-10, 10) + 'deg';
   el.src = 'img/friend/' + pick(others.length ? others : DATA.friends) + '.webp';
   el.classList.remove('up'); void el.offsetWidth; el.classList.add('up');
   setTimeout(() => { const c = center(el); burst(c.x, c.y - 30, 14, { shapes: ['star', 'heart'] }); sfx.sparkle(); }, 500);
@@ -1136,7 +1137,7 @@ async function flyby(id) {
     loadSprite('o_' + id).then(() => { if (!voice) say('o_' + id + ':name'); });
   });
 }
-setInterval(() => { if (!$('#stage').hidden && flyList.length && !document.hidden && $('#postcard').hidden && Math.random() < .7) flyby(pick(flyList)); }, 8000);
+// (things flying past were removed at the parent's request)
 
 // After the postcard, play inside the place: count the things that live there
 async function adventureGift(a, isNew, g) {
