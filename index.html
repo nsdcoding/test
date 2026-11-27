@@ -162,7 +162,9 @@ img{-webkit-user-drag:none;user-select:none}
 @keyframes friendUp{0%{transform:translateY(120%)}18%{transform:translateY(-6%) rotate(-6deg)}30%{transform:translateY(0) rotate(4deg)}45%{transform:translateY(-14%) rotate(-4deg)}60%{transform:translateY(0)}82%{transform:translateY(0)}100%{transform:translateY(120%)}}
 
 /* Robo's friend who plays alongside */
-#buddy{position:absolute;bottom:0;left:72%;height:44%;aspect-ratio:1;z-index:3;cursor:pointer}
+#buddy{position:fixed;left:0;top:0;width:clamp(90px,17vmin,170px);aspect-ratio:1;z-index:11;cursor:pointer;will-change:transform}
+#buddy.land img{animation:bland .35s cubic-bezier(.3,1.6,.5,1)}
+@keyframes bland{0%{transform:scale(1.3,.7)}100%{transform:none}}
 #stage.scene #robo{visibility:visible}
 #stage.scene #roboFloat{visibility:hidden}
 #buddy .bfloat{width:100%;height:100%;animation:bfloat 2.4s ease-in-out infinite}
@@ -373,12 +375,12 @@ img{-webkit-user-drag:none;user-select:none}
     <div id="roboCell">
       <div id="robo" role="button" aria-label="Robo the robot. Tap to play with Robo.">
         <div id="roboFloat"><div id="roboFig"><img id="roboImg" alt="Robo the robot"></div></div>
-        <div id="buddy" role="button" aria-label="Robo's friend"><div class="bfloat"><img id="buddyImg" alt=""></div></div>
       </div>
     </div>
     <div id="play"></div>
   </div>
 
+  <div id="buddy" role="button" aria-label="Robo's friend" hidden><div class="bfloat"><img id="buddyImg" alt=""></div></div>
   <img class="friend r" id="friendR" alt="">
   <img class="friend l" id="friendL" alt="">
   <div id="bigNum"><span></span></div>
@@ -659,16 +661,52 @@ R.addEventListener('pointerdown', e => { e.stopPropagation(); react(); });
 const BU = $('#buddy'), BI = $('#buddyImg');
 const buddy = {
   id: null, met: new Set(),
-  set(id) { if (!id || id === this.id) return; this.id = id; BI.src = 'img/friend/' + id + '.webp'; BI.alt = id; BU.className = id; this.anim('enter', 1000); loadSprite('f_' + id); },
+  set(id) {
+    if (!id || id === this.id) return; this.id = id; BI.src = 'img/friend/' + id + '.webp'; BI.alt = id; BU.className = id; loadSprite('f_' + id);
+    if (!BU.hidden) { const [x, y] = this.homeSpot(); this.place(innerWidth + 120, y); this.jumpTo(x, y, 900); }
+  },
   anim(c, ms = 700) { BU.classList.remove(c); void BU.offsetWidth; BU.classList.add(c); setTimeout(() => BU.classList.remove(c), ms); },
   talking(on) { BU.classList.toggle('talk', on); },
   hop() { this.anim('hop', 500); },
+  x: -200, y: 0, cur: null,
+  w() { return BU.getBoundingClientRect().width || 100; },
+  place(x, y) { this.x = x; this.y = y; const w = this.w(); BU.style.transform = `translate(${x - w / 2}px,${y - w}px)`; },
+  // leap along an arc to (x, y) = the spot under its feet
+  jumpTo(x, y, ms = 560) {
+    if (BU.hidden) { this.place(x, y); return Promise.resolve(); }
+    const w = this.w(), x0 = this.x, y0 = this.y, dist = Math.hypot(x - x0, y - y0);
+    if (dist < 4) { this.hop(); return wait(300); }
+    const h = Math.min(240, 70 + dist * .35), dir = x >= x0 ? 1 : -1, kf = [];
+    for (let i = 0; i <= 12; i++) { const t = i / 12, xx = x0 + (x - x0) * t, yy = y0 + (y - y0) * t - h * 4 * t * (1 - t);
+      kf.push({ transform: `translate(${xx - w / 2}px,${yy - w}px) rotate(${dir * Math.sin(t * Math.PI) * 16}deg)` }); }
+    this.x = x; this.y = y;
+    if (this.cur) { try { this.cur.cancel(); } catch (e) {} }
+    const a = this.cur = BU.animate(kf, { duration: ms, easing: 'ease-in-out' });
+    BU.style.transform = kf[kf.length - 1].transform.replace(/ rotate\([^)]*\)/, '');
+    sfx.tone(320, .2, 'sine', .18, 760);
+    a.finished.then(() => { if (this.cur === a) this.cur = null; this.anim('land', 350); sfx.tone(180, .08, 'triangle', .15); burst(x, y, 8, { colors: ['#ffffff', '#ffd23f', '#86fbff'], speed: 4, size: 8 }); }).catch(() => {});
+    return wait(ms);
+  },
+  onObj(o) { const r = o.getBoundingClientRect(); return this.jumpTo(r.left + r.width / 2, r.top + r.height * .25); },
+  homeSpot() {
+    const r = RI.getBoundingClientRect(), w = this.w();
+    let x = r.right + w * .2, y = r.bottom - 4;
+    if (x + w / 2 > innerWidth - 8) x = r.left - w * .2;
+    return [Math.max(w / 2 + 6, Math.min(innerWidth - w / 2 - 6, x)), Math.min(innerHeight - 6, y)];
+  },
+  home() { const [x, y] = this.homeSpot(); return this.jumpTo(x, y); },
+  show() {
+    if (!this.id || !BU.hidden) return;
+    BU.hidden = false; const [x, y] = this.homeSpot(); this.place(innerWidth + 120, y); this.jumpTo(x, y, 900);
+  },
+  hide() { BU.hidden = true; },
   async line(k) { if (!this.id) return; await loadSprite('f_' + this.id); return say(`f_${this.id}:${k}`); },
 };
 BU.addEventListener('pointerdown', e => {
   e.stopPropagation(); buddy.anim('spin', 1100); const c = center(BI); burst(c.x, c.y - 30, 16, { shapes: ['star', 'heart'] }); sfx.beep();
   if (!voice) buddy.line(pick(['giggle', 'giggle', 'love', 'cheer']));
 });
+addEventListener('resize', () => { if (!BU.hidden) { const [x, y] = buddy.homeSpot(); buddy.place(x, y); } });
 let friendSide = 0;
 function friendCheer() {
   if (!DATA || !DATA.friends.length) return;
@@ -805,6 +843,7 @@ async function finale(id, n, items, g) {
   play.prepend(nameTag(id, n)); sfx.sparkle();
   await g(say(`o_${id}:c${n}`));
   robo.pose('wave', 3000);
+  await g(buddy.home());
   await g(Promise.all([say(`o_${id}:fun`), exitAll(items, DATA.objects[id].exit)]));
 }
 
@@ -820,7 +859,7 @@ function roundTap(n, g, opts = {}) {
       items.forEach(o => o.addEventListener('pointerdown', async e => {
         e.stopPropagation(); idle.poke();
         if (finished || o.classList.contains('done')) return;
-        count++; markCount(o, count); sfx.pop(count - 1); bigNum(count); robo.pose(count % 3 ? 'wow' : 'cheer', 700); buddy.hop();
+        count++; markCount(o, count); sfx.pop(count - 1); bigNum(count); robo.pose(count % 3 ? 'wow' : 'cheer', 700); buddy.onObj(o);
         if (count < n) { say('core:n' + count); return; }
         finished = true; idle.stop();
         try { await g(say('core:n' + count)); await g(wait(250)); await finale(id, n, items, g); await celebrate(g); resolve(); } catch (err) { reject(err); }
@@ -840,7 +879,7 @@ async function countAloud(items, g) {
   items.forEach(o => { o.classList.remove('done'); o.querySelector('.badge')?.remove(); });
   for (let i = 0; i < items.length; i++) {
     items.forEach(o => o.classList.remove('hl'));
-    items[i].classList.add('hl'); markCount(items[i], i + 1); sfx.pop(i); bigNum(i + 1);
+    items[i].classList.add('hl'); markCount(items[i], i + 1); sfx.pop(i); bigNum(i + 1); buddy.onObj(items[i]);
     await g(say('core:n' + (i + 1)));
   }
   await g(wait(200)); items.forEach(o => o.classList.remove('hl'));
@@ -910,7 +949,7 @@ function roundFeed(n, g) {
         const from = o.getBoundingClientRect(), to = robo.mouth();
         const ghost = o.cloneNode(true); ghost.style.cssText = `position:fixed;left:${from.left}px;top:${from.top}px;width:${from.width}px;height:${from.height}px;margin:0;z-index:38;animation:none;pointer-events:none`;
         ghost.querySelector('.bob').style.animation = 'none';
-        document.body.appendChild(ghost); o.classList.add('gone'); sfx.whoosh();
+        document.body.appendChild(ghost); buddy.onObj(o); o.classList.add('gone'); sfx.whoosh();
         const dx = to.x - (from.left + from.width / 2), dy = to.y - (from.top + from.height / 2);
         const a = ghost.animate([{ transform: 'translate(0,0) scale(1) rotate(0)' }, { transform: `translate(${dx * .5}px,${dy * .5 - 140}px) scale(.9) rotate(200deg)`, offset: .5 },
           { transform: `translate(${dx}px,${dy}px) scale(.12) rotate(400deg)` }], { duration: 700, easing: 'cubic-bezier(.4,0,.6,1)' });
@@ -921,7 +960,7 @@ function roundFeed(n, g) {
           finished = true; idle.stop();
           items.forEach(x => { if (!x.classList.contains('gone')) x.classList.add('dim'); });
           try {
-            await g(say('core:n' + count)); robo.setBase('base'); robo.pose('love', 2500);
+            await g(say('core:n' + count)); buddy.home(); robo.setBase('base'); robo.pose('love', 2500);
             sign.remove(); play.prepend(nameTag(id, n));
             await g(say(`o_${id}:c${n}`)); await g(say(pick(['core:enough', 'core:nm_yum'])));
             await celebrate(g); resolve();
@@ -1178,6 +1217,7 @@ async function gameLoop() {
   const id = ++runId, g = guard(id);
   try {
     drawGifts(); updateChip(); dressRobo(); if (DATA.friends.length) buddy.set(DATA.friends[Math.floor(S.round / 3) % DATA.friends.length]);
+    setTimeout(() => buddy.show(), 700);
     if (!(S.trip && S.trip.left > 0)) setBg(pick(['park', 'garden', 'rainbow', 'playground'])); else roundBg();
     robo.pose('wave', 3500);
     await g(say(S.round > 0 ? 'core:welcome' : 'core:hello'));
@@ -1266,7 +1306,7 @@ $('#albumBtn').addEventListener('click', e => { e.stopPropagation(); openAlbum()
 $('#homeBtn').addEventListener('click', e => {
   e.stopPropagation(); runId++; stopVoice(); clearPlay(); robo.setBase('base');
   $('#present').hidden = true; $('#postcard').hidden = true; $('#sayInner').classList.remove('show');
-  $('#wearShow').hidden = true; $('#flight').hidden = true; $('#flight').innerHTML = ''; $('#stage').classList.remove('scene');
+  buddy.hide(); $('#wearShow').hidden = true; $('#flight').hidden = true; $('#flight').innerHTML = ''; $('#stage').classList.remove('scene');
   $('#hud').hidden = true; $('#stage').hidden = true; $('#start').hidden = false; setBg('rainbow'); dressCast();
 });
 $('#musicBtn').addEventListener('click', e => {
